@@ -19,7 +19,7 @@ struct CompanyDataSource {
     var companies: [Company] = [
         Company(name: "Yandex, LLC",abbreviation: "YNDX", logo: UIImage(named: "Yandex")!, price: 72.16, isFavourite: false),
         Company(name: "Apple, Inc.",abbreviation: "AAPL", logo: UIImage(named: "Apple")!, price: 131.93, isFavourite: false),
-        Company(name: "Alphabet Class A", abbreviation: "GOOGL", logo: UIImage(named: "Google")!, price: 1825, isFavourite: false),
+        Company(name: "Alphabet Class A", abbreviation: "GOOGL", logo: UIImage(named: "GoogleGoogle")!, price: 1825, isFavourite: false),
         Company(name: "Amazon.com", abbreviation: "AMZN", logo: UIImage(named: "Amazon")!, price: 3204, isFavourite: false),
     ]
     var favouriteCompanies: [Company] = []
