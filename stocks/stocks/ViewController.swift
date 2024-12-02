@@ -11,11 +11,7 @@ final class ViewController: UIViewController, UISearchBarDelegate, UISearchResul
     func updateSearchResults(for searchController: UISearchController) {
         print("searching for something")
     }
-    
-    //    func updateSearchResults(for searchController: UISearchController) {
-    //
-    //    }
-    
+
     private var stocksAppViews : StocksView!
     private var dataSourceForTableView = CompanyDataSource()
     private var currentStateOfButtons = "Stocks"
@@ -27,41 +23,32 @@ final class ViewController: UIViewController, UISearchBarDelegate, UISearchResul
         stocksAppViews.tableView.dataSource = self
         view.addSubview(stocksAppViews)
         stocksAppViews.searchBar.delegate = self
-        //        setUpSearchController()
         addTargets()
         // Do any additional setup after loading the view.
     }
-    //    func setUpSearchController() {
-    //        let searchController = stocksAppViews.searhController
-    //        searchController.searchResultsUpdater = self
-    //        searchController.obscuresBackgroundDuringPresentation = false
-    //        searchController.searchBar.placeholder = "Search"
-    //        searchController.hidesNavigationBarDuringPresentation = false
-    //        navigationItem.searchController = searchController
-    //        navigationItem.hidesSearchBarWhenScrolling = true
-    //        self.definesPresentationContext = false
-    //    }
+
     private func addTargets() {
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
     }
+    
     @objc func stocksButtonPressed() {
         if currentStateOfButtons != "Stocks" {
             currentStateOfButtons = "Stocks"
-            stocksAppViews.stocksButton.titleLabel?.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-            stocksAppViews.favouriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-            stocksAppViews.stocksButton.setTitleColor(.black, for: .normal)
-            stocksAppViews.favouriteButton.setTitleColor(.systemGray2, for: .normal)
+            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
+            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
+            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
+            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
             stocksAppViews.tableView.reloadData()
         }
     }
     @objc func favouriteButtonPressed() {
         if currentStateOfButtons != "Favourite" {
             currentStateOfButtons = "Favourite"
-            stocksAppViews.favouriteButton.titleLabel?.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-            stocksAppViews.stocksButton.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-            stocksAppViews.favouriteButton.setTitleColor(.black, for: .normal)
-            stocksAppViews.stocksButton.setTitleColor(.systemGray2, for: .normal)
+            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
+            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
+            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
+            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
             stocksAppViews.tableView.reloadData()
         }
     }
@@ -83,9 +70,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.delegate = self
             var backgroundColor : UIColor
             if (indexPath.row % 2 == 0){
-                backgroundColor = UIColor.white
+                backgroundColor = UIColor(rgb: 0xFFFFFF)
             } else {
-                backgroundColor = UIColor.lightGray
+                backgroundColor = UIColor(rgb: 0xF0F4F7)
             }
             cell.configure(logo: company.logo,
                            name: company.name,
@@ -101,9 +88,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             var backgroundColor : UIColor
             cell.delegate = self
             if (indexPath.row % 2 == 0){
-                backgroundColor = UIColor.white
+                backgroundColor = UIColor(rgb: 0xFFFFFF)
             } else {
-                backgroundColor = UIColor.lightGray
+                backgroundColor = UIColor(rgb: 0xF0F4F7)
             }
             cell.configure(logo: company.logo,
                            name: company.name,

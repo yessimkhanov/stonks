@@ -25,11 +25,11 @@ class StocksView : UIView {
         let button = UIButton()
         button.setTitle("Stocks", for: .normal)
 //        button.layer.backgroundColor = UIColor.black.cgColor
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
 //        button.layer.cornerRadius = 20
 //        button.layer.borderWidth = 2
 //        button.layer.borderColor = UIColor.white.cgColor
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -37,11 +37,11 @@ class StocksView : UIView {
         let button = UIButton()
         button.setTitle("Favourite", for: .normal)
 //        button.layer.backgroundColor = UIColor.systemCyan.cgColor
-        button.setTitleColor(.systemGray2, for: .normal)
+        button.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
 //        button.layer.cornerRadius = 20
 //        button.layer.borderWidth = 2
 //        button.layer.borderColor = UIColor.white.cgColor
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -62,18 +62,18 @@ class StocksView : UIView {
     
     private func setConstraints() {
         NSLayoutConstraint.activate([
-            searchBar.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
-            searchBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
-            searchBar.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
+            searchBar.topAnchor.constraint(equalTo: self.topAnchor, constant: 60),
+            searchBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            searchBar.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             
-            buttonStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
+            buttonStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
 //            buttonStack.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            buttonStack.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 40),
+            buttonStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 128),
             buttonStack.heightAnchor.constraint(equalToConstant: 50), // Set a fixed height for the buttons if necessary
             
-            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
-            tableView.topAnchor.constraint(equalTo: stocksButton.bottomAnchor, constant: 0),
+            tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            tableView.topAnchor.constraint(equalTo: stocksButton.bottomAnchor, constant: 20),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
@@ -91,3 +91,4 @@ class StocksView : UIView {
     
     
 }
+

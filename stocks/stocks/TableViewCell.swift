@@ -21,7 +21,7 @@ class TableViewCell: UITableViewCell {
     let name: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont(name: "Montserrat-Bold", size: 12)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,7 +29,7 @@ class TableViewCell: UITableViewCell {
     let abbreviature: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.font = UIFont(name: "Montserrat-Bold", size: 23)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,7 +37,7 @@ class TableViewCell: UITableViewCell {
     let price: UILabel = {
         let label = UILabel()
         label.text = ""
-        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.font = UIFont(name: "Montserrat-Bold", size: 18)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -71,29 +71,30 @@ class TableViewCell: UITableViewCell {
     private func setConstraints() {
         NSLayoutConstraint.activate([
             logo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            logo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            logo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            logo.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             logo.widthAnchor.constraint(equalToConstant: 52),
             logo.heightAnchor.constraint(equalToConstant: 52),
             
-            abbreviature.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 10),
+            abbreviature.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
             //            abbreviature.widthAnchor.constraint(equalToConstant: 80),
             abbreviature.heightAnchor.constraint(equalToConstant: 24),
-            abbreviature.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            abbreviature.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
             
-            name.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 10),
+            name.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
             //            name.widthAnchor.constraint(equalToConstant: 75),
             name.heightAnchor.constraint(equalToConstant: 16),
-            name.topAnchor.constraint(equalTo: abbreviature.bottomAnchor, constant: 2),
+            name.topAnchor.constraint(equalTo: abbreviature.bottomAnchor, constant: 0),
             
-            price.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10), // Add padding from the right
+            price.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -17), // Add padding from the right
             price.centerYAnchor.constraint(equalTo: contentView.centerYAnchor), // Center vertically in the cell
             //            price.widthAnchor.constraint(equalToConstant: 70),
             price.heightAnchor.constraint(equalToConstant: 24),
             
-            starButton.leadingAnchor.constraint(equalTo: abbreviature.trailingAnchor, constant: 8),
-            starButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
-            starButton.heightAnchor.constraint(equalToConstant: 18),
-            starButton.widthAnchor.constraint(equalToConstant: 18),
+            starButton.leadingAnchor.constraint(equalTo: abbreviature.trailingAnchor, constant: 6),
+            starButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 17),
+            starButton.heightAnchor.constraint(equalToConstant: 16),
+            starButton.widthAnchor.constraint(equalToConstant: 16),
         ])
     }
     private func addSubViews() {
@@ -115,18 +116,18 @@ class TableViewCell: UITableViewCell {
         self.contentView.backgroundColor = background
         self.isFavourite = isFavourite
         if isFavourite {
-            self.starButton.tintColor = .systemYellow
+            self.starButton.tintColor = UIColor(rgb: 0xFFCA1C)
         } else {
-            self.starButton.tintColor = .systemGray
+            self.starButton.tintColor = UIColor(rgb: 0xBABABA)
         }
         self.indexPath = indexPath
     }
     @objc func starButtonPressed() {
         if isFavourite == false {
-            starButton.tintColor = .systemYellow
+            starButton.tintColor = UIColor(rgb: 0xFFCA1C)
             self.delegate?.markFavouriteCompany(at: indexPath!)
         } else {
-            starButton.tintColor = .systemGray
+            starButton.tintColor = UIColor(rgb: 0xBABABA)
             self.delegate?.unMarkFavouriteCompany(at: indexPath!)
         }
     }
