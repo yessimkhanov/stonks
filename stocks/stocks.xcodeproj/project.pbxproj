@@ -14,7 +14,7 @@
 		191E108A2CFA29EE00EEEA9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 191E10892CFA29EE00EEEA9A /* Assets.xcassets */; };
 		191E108D2CFA29EE00EEEA9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */; };
 		191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10942CFA2C2300EEEA9A /* TableViewModel.swift */; };
-		191E10972CFA2C4800EEEA9A /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10962CFA2C4800EEEA9A /* TableViewCell.swift */; };
+		191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10962CFA2C4800EEEA9A /* TickerCell.swift */; };
 		191E10992CFA2C6B00EEEA9A /* StocksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10982CFA2C6B00EEEA9A /* StocksView.swift */; };
 		191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E109A2CFD8F6900EEEA9A /* Extensions.swift */; };
 		191E10B32CFD948700EEEA9A /* Montserrat-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E109F2CFD948700EEEA9A /* Montserrat-LightItalic.ttf */; };
@@ -37,6 +37,7 @@
 		191E10C42CFD948700EEEA9A /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B02CFD948700EEEA9A /* LICENSE.txt */; };
 		191E10C52CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */; };
 		191E10C62CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */; };
+		191E10C82CFF037300EEEA9A /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10C72CFF037300EEEA9A /* Protocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +50,7 @@
 		191E108C2CFA29EE00EEEA9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		191E108E2CFA29EE00EEEA9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		191E10942CFA2C2300EEEA9A /* TableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
-		191E10962CFA2C4800EEEA9A /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		191E10962CFA2C4800EEEA9A /* TickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerCell.swift; sourceTree = "<group>"; };
 		191E10982CFA2C6B00EEEA9A /* StocksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksView.swift; sourceTree = "<group>"; };
 		191E109A2CFD8F6900EEEA9A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		191E109F2CFD948700EEEA9A /* Montserrat-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-LightItalic.ttf"; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 		191E10B02CFD948700EEEA9A /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
+		191E10C72CFF037300EEEA9A /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +114,10 @@
 				191E108E2CFA29EE00EEEA9A /* Info.plist */,
 				191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */,
 				191E10942CFA2C2300EEEA9A /* TableViewModel.swift */,
-				191E10962CFA2C4800EEEA9A /* TableViewCell.swift */,
+				191E10962CFA2C4800EEEA9A /* TickerCell.swift */,
 				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
 				191E109A2CFD8F6900EEEA9A /* Extensions.swift */,
+				191E10C72CFF037300EEEA9A /* Protocols.swift */,
 				191E109E2CFD948700EEEA9A /* Montserrat */,
 			);
 			path = stocks;
@@ -241,8 +244,9 @@
 				191E10822CFA29EB00EEEA9A /* ViewController.swift in Sources */,
 				191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */,
 				191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */,
+				191E10C82CFF037300EEEA9A /* Protocols.swift in Sources */,
 				191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */,
-				191E10972CFA2C4800EEEA9A /* TableViewCell.swift in Sources */,
+				191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */,
 				191E10882CFA29EB00EEEA9A /* stocks.xcdatamodeld in Sources */,
 				191E10802CFA29EB00EEEA9A /* SceneDelegate.swift in Sources */,
 				191E10992CFA2C6B00EEEA9A /* StocksView.swift in Sources */,
