@@ -8,6 +8,7 @@
 import UIKit
 
 final class ViewController: UIViewController{
+    
     private var dataSourceForTableView = CompanyDataSource()
     private enum StateOfButton {
         case stocks
