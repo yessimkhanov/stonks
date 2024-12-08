@@ -136,10 +136,20 @@ final class TickerCell: UITableViewCell {
     private func starButtonPressed() {
         if isFavourite == false {
             starButton.tintColor = UIColor(rgb: 0xFFCA1C)
-            self.delegate?.markFavouriteCompany(at: indexPath!)
+            if let index = indexPath {
+                self.delegate?.markFavouriteCompany(at: index)
+            }else{
+                return
+            }
+            
         } else {
             starButton.tintColor = UIColor(rgb: 0xBABABA)
-            self.delegate?.unMarkFavouriteCompany(at: indexPath!)
+            if let index = indexPath {
+                self.delegate?.unMarkFavouriteCompany(at: index)
+            }else{
+                return
+            }
+            
         }
     }
 }

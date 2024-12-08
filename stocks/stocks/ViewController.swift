@@ -7,16 +7,15 @@
 
 import UIKit
 
-final class ViewController: UIViewController{
+final class ViewController:UIViewController {
+    var dataSourceForTableView = CompanyDataSource()
     
-    private var dataSourceForTableView = CompanyDataSource()
-    private enum StateOfButton {
-        case stocks
-        case favourite
-    }
-    private var currentState = StateOfButton.stocks
+    private lazy var stocksPresenter: PresenterProtocol = {
+        return StocksPresenter(view: self, dataSource: dataSourceForTableView)
+    }()
+    
     private lazy var stocksAppViews: StocksView = {
-        stocksAppViews = StocksView(frame: self.view.frame)
+        let stocksAppViews = StocksView(frame: self.view.frame)
         stocksAppViews.tableView.delegate = self
         stocksAppViews.tableView.dataSource = self
         stocksAppViews.searchBar.delegate = self
@@ -27,6 +26,7 @@ final class ViewController: UIViewController{
         super.viewDidLoad()
         view.addSubview(stocksAppViews)
         addTargets()
+        stocksPresenter.viewDidLoad()
     }
     
     private func addTargets() {
@@ -36,54 +36,22 @@ final class ViewController: UIViewController{
     
     @objc
     private func stocksButtonPressed(_ sender: UIButton) {
-        switch currentState {
-        case .favourite:
-            currentState = .stocks
-            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
-            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
-            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
-            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
-            stocksAppViews.tableView.reloadData()
-        default:
-            break
-        }
+        stocksPresenter.stocksButtonPressed()
     }
     
     @objc
     private func favouriteButtonPressed() {
-        switch currentState{
-        case .stocks:
-            currentState = .favourite
-            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
-            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
-            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
-            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
-            stocksAppViews.tableView.reloadData()
-        default:
-            break
-        }
+        stocksPresenter.favouriteButtonPressed()
     }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
+extension ViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch currentState {
-        case .stocks:
-            return dataSourceForTableView.companies.count
-        case .favourite:
-            return dataSourceForTableView.favouriteCompanies.count
-        }
+        return stocksPresenter.numberOfRows(for: stocksPresenter.currentState)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let company: Company
-        switch currentState{
-        case .stocks:
-            company = dataSourceForTableView.companies[indexPath.row]
-        case .favourite:
-            company = dataSourceForTableView.favouriteCompanies[indexPath.row]
-        }
-        
+        let company: Company = stocksPresenter.companyForRow(at: indexPath.row, for: stocksPresenter.currentState)
         let cell = stocksAppViews.tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! TickerCell
         cell.delegate = self
         let backgroundColor: UIColor = indexPath.row % 2 == 0 ? UIColor(rgb: 0xFFFFFF) : UIColor(rgb: 0xF0F4F7)
@@ -100,7 +68,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 68
+        return stocksPresenter.heightForRow(at: indexPath.row)
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
@@ -108,36 +76,40 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ViewController: TickerCellDelegate {
-    func unMarkFavouriteCompany(at indexPath: Int) {
-        switch currentState {
-        case .stocks:
-            let companyToRemove = dataSourceForTableView.companies[indexPath]
-            if let favouriteIndex = dataSourceForTableView.favouriteCompanies.firstIndex(where: { $0.name == companyToRemove.name }) {
-                dataSourceForTableView.companies[indexPath].isFavourite = false
-                dataSourceForTableView.favouriteCompanies.remove(at: favouriteIndex)
-            }
-        case .favourite:
-            let companyToRemove = dataSourceForTableView.favouriteCompanies[indexPath]
-            if let stockIndex = dataSourceForTableView.companies.firstIndex(where: { $0.name == companyToRemove.name }) {
-                dataSourceForTableView.companies[stockIndex].isFavourite = false
-            }
-            dataSourceForTableView.favouriteCompanies.remove(at: indexPath)
-        }
-        stocksAppViews.tableView.reloadData()
+extension ViewController:TickerCellDelegate {
+    func unMarkFavouriteCompany(at index: Int) {
+        stocksPresenter.unmarkFavourite(at: index, for: stocksPresenter.currentState)
     }
     
-    func markFavouriteCompany(at indexPath: Int) {
-        dataSourceForTableView.companies[indexPath].isFavourite = true
-        dataSourceForTableView.favouriteCompanies.append(dataSourceForTableView.companies[indexPath])
-        stocksAppViews.tableView.reloadData()
+    func markFavouriteCompany(at index: Int) {
+        stocksPresenter.markFavourite(at: index, for: stocksPresenter.currentState)
     }
 }
 
-extension ViewController: UISearchBarDelegate, UISearchResultsUpdating {
+extension ViewController:UISearchBarDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         print("searching for something")
     }
 }
 
-
+extension ViewController:ViewProtocol {
+    func reloadTableView() {
+        stocksAppViews.tableView.reloadData()
+    }
+    
+    func updateButtonStyles(for state: StateOfButton) {
+        switch state{
+        case .stocks:
+            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
+            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
+            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
+            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
+            stocksAppViews.tableView.reloadData()
+        case .favourite:
+            stocksAppViews.favouriteButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 28)
+            stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
+            stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
+            stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
+        }
+    }
+}
