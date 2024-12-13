@@ -14,7 +14,7 @@ protocol StocksPresenterProtocol: AnyObject {
 final class StocksPresenter: StocksPresenterProtocol {
     
     private weak var view: ViewProtocol?
-    private var dataSource = CompanyDataSource()
+    private var dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
     
     init(view: ViewProtocol, dataSource: CompanyDataSource) {
