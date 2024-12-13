@@ -1,9 +1,20 @@
 
 import Foundation
 
-final class StocksPresenter: PresenterProtocol {
+protocol StocksPresenterProtocol: AnyObject {
+    var currentState: StateOfButton { get }
+    func viewDidLoad()
+    func stocksButtonPressed()
+    func favouriteButtonPressed()
+    func numberOfRows() -> Int
+    func companyForRow(at index: Int) -> Company
+    func starButtonPressed(at index: Int, isFavourite: Bool)
+}
+
+final class StocksPresenter: StocksPresenterProtocol {
+    
     private weak var view: ViewProtocol?
-    private var dataSource: CompanyDataSource
+    private var dataSource = CompanyDataSource()
     var currentState: StateOfButton = .stocks
     
     init(view: ViewProtocol, dataSource: CompanyDataSource) {
@@ -29,8 +40,8 @@ final class StocksPresenter: PresenterProtocol {
         view?.reloadTableView()
     }
     
-    func numberOfRows(for state: StateOfButton) -> Int {
-        switch state {
+    func numberOfRows() -> Int {
+        switch currentState {
         case .stocks:
             return dataSource.companies.count
         case .favourite:
@@ -38,8 +49,8 @@ final class StocksPresenter: PresenterProtocol {
         }
     }
     
-    func companyForRow(at index: Int, for state: StateOfButton) -> Company {
-        switch state {
+    func companyForRow(at index: Int) -> Company {
+        switch currentState {
         case .stocks:
             return dataSource.companies[index]
         case .favourite:
@@ -47,32 +58,32 @@ final class StocksPresenter: PresenterProtocol {
         }
     }
     
-    func heightForRow(at index: Int) -> CGFloat {
-        return 68
-    }
-    
-    func markFavourite(at index: Int, for state: StateOfButton) {
-        guard state == .stocks else { return }
-        dataSource.companies[index].isFavourite = true
-        dataSource.favouriteCompanies.append(dataSource.companies[index])
-        view?.reloadTableView()
-    }
-    
-    func unmarkFavourite(at index: Int, for state: StateOfButton) {
-        switch state {
-        case .stocks:
-            let company = dataSource.companies[index]
-            if let favouriteIndex = dataSource.favouriteCompanies.firstIndex(where: { $0.name == company.name }) {
-                dataSource.favouriteCompanies.remove(at: favouriteIndex)
-                dataSource.companies[index].isFavourite = false
+    func starButtonPressed(at index: Int, isFavourite: Bool) {
+        if isFavourite == false {
+            guard currentState == .stocks else { return }
+            dataSource.companies[index].isFavourite = true
+            dataSource.favouriteCompanies.append(dataSource.companies[index])
+        }else{
+            switch currentState {
+            case .stocks:
+                let company = dataSource.companies[index]
+                if let favouriteIndex = dataSource.favouriteCompanies.firstIndex(where: { $0.name == company.name }) {
+                    dataSource.favouriteCompanies.remove(at: favouriteIndex)
+                    dataSource.companies[index].isFavourite = false
+                }
+            case .favourite:
+                let company = dataSource.favouriteCompanies[index]
+                if let stockIndex = dataSource.companies.firstIndex(where: { $0.name == company.name }) {
+                    dataSource.companies[stockIndex].isFavourite = false
+                }
+                dataSource.favouriteCompanies.remove(at: index)
             }
-        case .favourite:
-            let company = dataSource.favouriteCompanies[index]
-            if let stockIndex = dataSource.companies.firstIndex(where: { $0.name == company.name }) {
-                dataSource.companies[stockIndex].isFavourite = false
-            }
-            dataSource.favouriteCompanies.remove(at: index)
         }
         view?.reloadTableView()
     }
+}
+
+enum StateOfButton {
+    case stocks
+    case favourite
 }

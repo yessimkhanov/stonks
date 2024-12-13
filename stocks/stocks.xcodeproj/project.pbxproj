@@ -37,9 +37,7 @@
 		191E10C42CFD948700EEEA9A /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B02CFD948700EEEA9A /* LICENSE.txt */; };
 		191E10C52CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */; };
 		191E10C62CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */; };
-		191E10C82CFF037300EEEA9A /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10C72CFF037300EEEA9A /* Protocols.swift */; };
 		191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */; };
-		191E10D02D0304DD00EEEA9A /* StateOfButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10CF2D0304DC00EEEA9A /* StateOfButtons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -75,9 +73,7 @@
 		191E10B02CFD948700EEEA9A /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
-		191E10C72CFF037300EEEA9A /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksPresenter.swift; sourceTree = "<group>"; };
-		191E10CF2D0304DC00EEEA9A /* StateOfButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateOfButtons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,14 +112,12 @@
 				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
 				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
 				191E10892CFA29EE00EEEA9A /* Assets.xcassets */,
-				191E10CF2D0304DC00EEEA9A /* StateOfButtons.swift */,
 				191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */,
 				191E108E2CFA29EE00EEEA9A /* Info.plist */,
 				191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */,
 				191E10942CFA2C2300EEEA9A /* TableViewModel.swift */,
 				191E10962CFA2C4800EEEA9A /* TickerCell.swift */,
 				191E109A2CFD8F6900EEEA9A /* Extensions.swift */,
-				191E10C72CFF037300EEEA9A /* Protocols.swift */,
 				191E109E2CFD948700EEEA9A /* Montserrat */,
 			);
 			path = stocks;
@@ -250,8 +244,6 @@
 				191E10822CFA29EB00EEEA9A /* ViewController.swift in Sources */,
 				191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */,
 				191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */,
-				191E10D02D0304DD00EEEA9A /* StateOfButtons.swift in Sources */,
-				191E10C82CFF037300EEEA9A /* Protocols.swift in Sources */,
 				191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */,
 				191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */,
 				191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */,

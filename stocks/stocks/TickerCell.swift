@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol TickerCellDelegate: AnyObject {
+    func starButtonPressed(at index: Int, for state: Bool)
+}
+
 final class TickerCell: UITableViewCell {
     weak var delegate: TickerCellDelegate?
     private var indexPath: Int?
@@ -65,7 +69,7 @@ final class TickerCell: UITableViewCell {
         contentView.clipsToBounds = true
         logo.layer.cornerRadius = 10
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -116,7 +120,8 @@ final class TickerCell: UITableViewCell {
         price: Double,
         background : UIColor,
         isFavourite: Bool,
-        indexPath: Int) {
+        indexPath: Int
+    ) {
         self.logo.image = logo
         self.name.text = name
         self.abbreviature.text = abbreviature
@@ -124,32 +129,15 @@ final class TickerCell: UITableViewCell {
         self.price.text = "$\(self.price.text!)"
         self.contentView.backgroundColor = background
         self.isFavourite = isFavourite
-        if isFavourite {
-            self.starButton.tintColor = UIColor(rgb: 0xFFCA1C)
-        } else {
-            self.starButton.tintColor = UIColor(rgb: 0xBABABA)
-        }
+        self.starButton.tintColor = UIColor(rgb: isFavourite ? 0xFFCA1C : 0xBABABA)
         self.indexPath = indexPath
     }
     
     @objc
     private func starButtonPressed() {
-        if isFavourite == false {
-            starButton.tintColor = UIColor(rgb: 0xFFCA1C)
-            if let index = indexPath {
-                self.delegate?.markFavouriteCompany(at: index)
-            }else{
-                return
-            }
-            
-        } else {
-            starButton.tintColor = UIColor(rgb: 0xBABABA)
-            if let index = indexPath {
-                self.delegate?.unMarkFavouriteCompany(at: index)
-            }else{
-                return
-            }
-            
+        if let isFavourite, let indexPath {
+            self.delegate?.starButtonPressed(at: indexPath, for: isFavourite)
+            self.starButton.tintColor = UIColor(rgb: isFavourite ? 0xFFCA1C : 0xBABABA)
         }
     }
 }
