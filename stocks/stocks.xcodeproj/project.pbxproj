@@ -38,6 +38,7 @@
 		191E10C52CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */; };
 		191E10C62CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */; };
 		191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */; };
+		191E10D22D11B38000EEEA9A /* StocksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10D12D11B38000EEEA9A /* StocksManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		191E10B12CFD948700EEEA9A /* Montserrat-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksPresenter.swift; sourceTree = "<group>"; };
+		191E10D12D11B38000EEEA9A /* StocksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				191E10812CFA29EB00EEEA9A /* ViewController.swift */,
 				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
 				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
+				191E10D12D11B38000EEEA9A /* StocksManager.swift */,
 				191E10892CFA29EE00EEEA9A /* Assets.xcassets */,
 				191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */,
 				191E108E2CFA29EE00EEEA9A /* Info.plist */,
@@ -247,6 +250,7 @@
 				191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */,
 				191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */,
 				191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */,
+				191E10D22D11B38000EEEA9A /* StocksManager.swift in Sources */,
 				191E10882CFA29EB00EEEA9A /* stocks.xcdatamodeld in Sources */,
 				191E10802CFA29EB00EEEA9A /* SceneDelegate.swift in Sources */,
 				191E10992CFA2C6B00EEEA9A /* StocksView.swift in Sources */,

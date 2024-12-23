@@ -8,10 +8,21 @@ import Foundation
 import UIKit
 
 final class StocksView: UIView {
-    let searchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search"
+    let searchBar: UITextField = {
+        let searchBar = UITextField()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.layer.cornerRadius = 23
+        searchBar.layer.masksToBounds = true
+        searchBar.layer.borderWidth = 1
+        searchBar.textAlignment = .center
+        searchBar.layer.borderColor = UIColor.black.cgColor
+        searchBar.attributedPlaceholder = NSAttributedString(
+            string: "Find Company or Ticker",
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 18), // Custom font size
+                .foregroundColor: UIColor.black   // Optional: Change placeholder color
+            ]
+        )
         return searchBar
     }()
     
@@ -61,6 +72,7 @@ final class StocksView: UIView {
             searchBar.topAnchor.constraint(equalTo: self.topAnchor, constant: 60),
             searchBar.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             searchBar.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
+            searchBar.heightAnchor.constraint(equalToConstant: 48),
             
             buttonStack.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
             buttonStack.topAnchor.constraint(equalTo: self.topAnchor, constant: 128),

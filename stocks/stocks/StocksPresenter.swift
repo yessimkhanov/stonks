@@ -1,5 +1,6 @@
 
 import Foundation
+import UIKit
 
 protocol StocksPresenterProtocol: AnyObject {
     var currentState: StateOfButton { get }
@@ -9,14 +10,14 @@ protocol StocksPresenterProtocol: AnyObject {
     func numberOfRows() -> Int
     func companyForRow(at index: Int) -> Company
     func starButtonPressed(at index: Int, isFavourite: Bool)
+    func addCompany(_ companyToAdd: String) -> Bool
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
-    
     private weak var view: ViewProtocol?
     private var dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
-    
+    var manager = StocksManager()
     init(view: ViewProtocol, dataSource: CompanyDataSource) {
         self.view = view
         self.dataSource = dataSource
@@ -24,6 +25,7 @@ final class StocksPresenter: StocksPresenterProtocol {
     
     func viewDidLoad() {
         view?.reloadTableView()
+        manager.delegate = self
     }
     
     func stocksButtonPressed() {
@@ -81,9 +83,24 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
         view?.reloadTableView()
     }
+    func addCompany(_ companyToAdd: String) -> Bool {
+        return true
+    }
+    
 }
 
 enum StateOfButton {
     case stocks
     case favourite
+}
+
+extension StocksPresenter: StocksPriceDelegate {
+    func changePriceOfCompany(_ price: Double, company: String) {
+        DispatchQueue.main.async {
+            if let companyToChange = self.dataSource.companies.firstIndex(where: {$0.abbreviation == company}) {
+                self.dataSource.companies[companyToChange].price = price
+            }
+            self.view?.reloadTableView()
+        }
+    }
 }

@@ -14,7 +14,9 @@ struct Company {
     var price: Double
     var isFavourite: Bool
 }
-
+struct CompanyPrice: Decodable {
+    var c: Double
+}
 struct CompanyDataSource {
     var companies: [Company] = [
         Company(name: "Yandex, LLC",abbreviation: "YNDX", logo: UIImage(named: "Yandex")!, price: 72.16, isFavourite: false),
@@ -23,4 +25,11 @@ struct CompanyDataSource {
         Company(name: "Amazon.com", abbreviation: "AMZN", logo: UIImage(named: "Amazon")!, price: 3204, isFavourite: false),
     ]
     var favouriteCompanies: [Company] = []
+}
+struct Comp: Decodable {
+    let count: Int
+    let result: [Results]
+}
+struct Results: Decodable {
+    let displaySymbol: String
 }

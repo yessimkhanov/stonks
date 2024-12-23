@@ -29,6 +29,7 @@ final class ViewController:UIViewController {
         super.viewDidLoad()
         view.addSubview(stocksAppViews)
         stocksPresenter.viewDidLoad()
+//        self.navigationController?.navigationBar.isTranslucent = false
     }
     
     @objc
@@ -79,9 +80,20 @@ extension ViewController:TickerCellDelegate {
     }
 }
 
-extension ViewController:UISearchBarDelegate, UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-        print("searching for something")
+extension ViewController:UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.text = ""
+        print("Editing ended")
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("User input: \(textField.text ?? "")")
+        if(stocksPresenter.addCompany(textField.text ?? "")){
+            print("Everything is good")
+        } else {
+            print("OHHHH SHIT")
+        }
+        textField.resignFirstResponder() // Dismiss the keyboard
+        return true
     }
 }
 

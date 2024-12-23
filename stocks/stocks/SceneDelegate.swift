@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         mainVC.stocksPresenter = stocksPresenter
         
         let window = UIWindow(windowScene: windowScene)
-        let navController = UINavigationController(rootViewController: mainVC) 
-        window.rootViewController = navController
+//        let navController = UINavigationController(rootViewController: mainVC) 
+        window.rootViewController = mainVC
         self.window = window
         self.window?.makeKeyAndVisible()
     }
