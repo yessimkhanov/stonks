@@ -20,11 +20,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let mainVC = ViewController()
         let stocksDataSource = CompanyDataSource()
-        let stocksPresenter = StocksPresenter(view: mainVC, dataSource: stocksDataSource)
+        let manager = StocksManager()
+        let stocksPresenter = StocksPresenter(view: mainVC, dataSource: stocksDataSource, manager: manager)
         mainVC.stocksPresenter = stocksPresenter
         
         let window = UIWindow(windowScene: windowScene)
-//        let navController = UINavigationController(rootViewController: mainVC) 
         window.rootViewController = mainVC
         self.window = window
         self.window?.makeKeyAndVisible()

@@ -2,6 +2,11 @@
 import Foundation
 import UIKit
 
+enum StateOfButton {
+    case stocks
+    case favourite
+}
+
 protocol StocksPresenterProtocol: AnyObject {
     var currentState: StateOfButton { get }
     func viewDidLoad()
@@ -10,22 +15,23 @@ protocol StocksPresenterProtocol: AnyObject {
     func numberOfRows() -> Int
     func companyForRow(at index: Int) -> Company
     func starButtonPressed(at index: Int, isFavourite: Bool)
-    func addCompany(_ companyToAdd: String) -> Bool
+    func addCompany(_ companyToAdd: String)
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
     private weak var view: ViewProtocol?
     private var dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
-    var manager = StocksManager()
-    init(view: ViewProtocol, dataSource: CompanyDataSource) {
+    private var manager: StocksManager
+    init(view: ViewProtocol, dataSource: CompanyDataSource, manager: StocksManager) {
         self.view = view
         self.dataSource = dataSource
+        self.manager = manager
+        self.manager.delegate = self
     }
     
     func viewDidLoad() {
         view?.reloadTableView()
-        manager.delegate = self
     }
     
     func stocksButtonPressed() {
@@ -65,7 +71,7 @@ final class StocksPresenter: StocksPresenterProtocol {
             guard currentState == .stocks else { return }
             dataSource.companies[index].isFavourite = true
             dataSource.favouriteCompanies.append(dataSource.companies[index])
-        }else{
+        } else {
             switch currentState {
             case .stocks:
                 let company = dataSource.companies[index]
@@ -83,23 +89,24 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
         view?.reloadTableView()
     }
-    func addCompany(_ companyToAdd: String) -> Bool {
-        return true
+    func addCompany(_ companyToAdd: String) {
+        manager.addNewCompany(companyName: companyToAdd)
     }
     
 }
 
-enum StateOfButton {
-    case stocks
-    case favourite
-}
-
-extension StocksPresenter: StocksPriceDelegate {
-    func changePriceOfCompany(_ price: Double, company: String) {
+extension StocksPresenter: StocksNetworkingDelegate {
+    func addNewCompany(_ price: Double, _ abbreviation: String,_ name: String,_ logo: UIImage) {
+        let company = Company(name: name, abbreviation: abbreviation, logo: logo, price: price, isFavourite: false)
+        
+        if let stockIndex = self.dataSource.companies.firstIndex(where: {$0.abbreviation == company.abbreviation}) {
+            self.dataSource.companies[stockIndex].price = price
+            self.dataSource.companies[stockIndex].logo = logo
+        } else {
+            self.dataSource.companies.append(company)
+        }
+        
         DispatchQueue.main.async {
-            if let companyToChange = self.dataSource.companies.firstIndex(where: {$0.abbreviation == company}) {
-                self.dataSource.companies[companyToChange].price = price
-            }
             self.view?.reloadTableView()
         }
     }

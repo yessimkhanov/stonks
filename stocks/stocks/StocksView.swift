@@ -19,8 +19,8 @@ final class StocksView: UIView {
         searchBar.attributedPlaceholder = NSAttributedString(
             string: "Find Company or Ticker",
             attributes: [
-                .font: UIFont.systemFont(ofSize: 18), // Custom font size
-                .foregroundColor: UIColor.black   // Optional: Change placeholder color
+                .font: UIFont.systemFont(ofSize: 18),
+                .foregroundColor: UIColor.black
             ]
         )
         return searchBar
@@ -93,7 +93,7 @@ final class StocksView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("Error in initializing the BMIView")
+        fatalError("Error in initializing the StocksView")
     }
 }
 

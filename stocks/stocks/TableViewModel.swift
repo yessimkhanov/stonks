@@ -7,15 +7,13 @@
 
 import Foundation
 import UIKit
+// MARK: HardCoded Companies
 struct Company {
     var name: String
     var abbreviation: String
     var logo: UIImage
     var price: Double
     var isFavourite: Bool
-}
-struct CompanyPrice: Decodable {
-    var c: Double
 }
 struct CompanyDataSource {
     var companies: [Company] = [
@@ -26,10 +24,16 @@ struct CompanyDataSource {
     ]
     var favouriteCompanies: [Company] = []
 }
-struct Comp: Decodable {
+// MARK: Companies from the internet
+struct CompanyPrice: Decodable {
+    let c: Double
+}
+
+struct CompanyJSON: Decodable {
     let count: Int
     let result: [Results]
 }
 struct Results: Decodable {
     let displaySymbol: String
+    let description: String
 }
