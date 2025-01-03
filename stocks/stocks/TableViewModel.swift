@@ -9,11 +9,11 @@ import Foundation
 import UIKit
 // MARK: HardCoded Companies
 struct Company {
-    var name: String
-    var abbreviation: String
-    var logo: UIImage
-    var price: Double
-    var isFavourite: Bool
+    var name: String = ""
+    var abbreviation: String = ""
+    var logo: UIImage = UIImage()
+    var price: Double = 0.0
+    var isFavourite: Bool = false
 }
 struct CompanyDataSource {
     var companies: [Company] = [

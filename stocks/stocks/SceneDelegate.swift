@@ -21,7 +21,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let mainVC = ViewController()
         let stocksDataSource = CompanyDataSource()
         let manager = StocksManager()
-        let stocksPresenter = StocksPresenter(view: mainVC, dataSource: stocksDataSource, manager: manager)
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let stocksPresenter = StocksPresenter(
+            view: mainVC,
+            dataSource: stocksDataSource,
+            manager: manager,
+            context: context
+        )
         mainVC.stocksPresenter = stocksPresenter
         
         let window = UIWindow(windowScene: windowScene)

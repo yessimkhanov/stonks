@@ -39,6 +39,10 @@
 		191E10C62CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */; };
 		191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */; };
 		191E10D22D11B38000EEEA9A /* StocksManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10D12D11B38000EEEA9A /* StocksManager.swift */; };
+		19F25EA42D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA02D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift */; };
+		19F25EA52D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */; };
+		19F25EA62D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */; };
+		19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +80,10 @@
 		191E10B22CFD948700EEEA9A /* Montserrat-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksPresenter.swift; sourceTree = "<group>"; };
 		191E10D12D11B38000EEEA9A /* StocksManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksManager.swift; sourceTree = "<group>"; };
+		19F25EA02D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteCompanyItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteCompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +129,7 @@
 				191E10942CFA2C2300EEEA9A /* TableViewModel.swift */,
 				191E10962CFA2C4800EEEA9A /* TickerCell.swift */,
 				191E109A2CFD8F6900EEEA9A /* Extensions.swift */,
+				19F25E9F2D26860B00FF02E6 /* StocksItem */,
 				191E109E2CFD948700EEEA9A /* Montserrat */,
 			);
 			path = stocks;
@@ -152,6 +161,17 @@
 			);
 			name = Montserrat;
 			path = ../../../../Montserrat;
+			sourceTree = "<group>";
+		};
+		19F25E9F2D26860B00FF02E6 /* StocksItem */ = {
+			isa = PBXGroup;
+			children = (
+				19F25EA02D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift */,
+				19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */,
+				19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */,
+				19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */,
+			);
+			path = StocksItem;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -244,10 +264,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */,
 				191E10822CFA29EB00EEEA9A /* ViewController.swift in Sources */,
 				191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */,
+				19F25EA42D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift in Sources */,
 				191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */,
 				191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */,
+				19F25EA52D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift in Sources */,
+				19F25EA62D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift in Sources */,
 				191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */,
 				191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */,
 				191E10D22D11B38000EEEA9A /* StocksManager.swift in Sources */,

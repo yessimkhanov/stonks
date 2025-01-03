@@ -8,48 +8,31 @@
 import Foundation
 import UIKit
 
-protocol StocksNetworkingDelegate: AnyObject {
-    func addNewCompany(_ price: Double, _ abbreviation: String, _ name: String, _ logo: UIImage)
-}
-
-final class StocksManager {
-    weak var delegate: StocksNetworkingDelegate?
-    
-    private var price: Double?
-    private var logo: UIImage?
-    private var abbreviation: String?
-    private var name: String?
-    private let dispatchGroup = DispatchGroup()
-    
-    func addNewCompany(companyName: String){
+final class StocksManager {    
+    func addNewCompany(companyName: String, completion: @escaping(Company) -> Void){
+        var newCompany = Company()
+        let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         searchCompany(companyName) { company in
-            self.abbreviation = company.displaySymbol
-            self.name = company.description
+            newCompany.abbreviation = company.displaySymbol
+            newCompany.name = company.description
             
-            self.dispatchGroup.enter()
-            self.searchCompanyPrice(company.displaySymbol) { price in
-                self.price = price
-                self.dispatchGroup.leave()
+            dispatchGroup.enter()
+            self.searchCompanyPrice(company.displaySymbol) { currentPrice in
+                newCompany.price = currentPrice
+                dispatchGroup.leave()
             }
             
-            self.dispatchGroup.enter()
-            self.searchCompanyLogo(company.displaySymbol) { logo in
-                self.logo = logo
-                self.dispatchGroup.leave()
+            dispatchGroup.enter()
+            self.searchCompanyLogo(company.displaySymbol) { image in
+                newCompany.logo = image
+                dispatchGroup.leave()
             }
             
-            self.dispatchGroup.leave()
+            dispatchGroup.leave()
         }
         dispatchGroup.notify(queue: .main) {
-            guard let name = self.name,
-                  let abbreviation = self.abbreviation,
-                  let logo = self.logo,
-                  let price = self.price else {
-                print("Error in dispatchgroup")
-                return
-            }
-            self.delegate?.addNewCompany(price, abbreviation, name, logo)
+            completion(newCompany)
         }
     }
     
@@ -94,6 +77,7 @@ final class StocksManager {
     }
     
     private func searchCompanyLogo(_ name: String, completion: @escaping(UIImage) -> Void){
+        let defaultLogo = UIImage(named: "Kaspi")
         let newURL = "https://finnhub.io/api/logo?symbol=\(name)"
         if let url = URL(string: newURL){
             let session = URLSession(configuration: .default)
@@ -101,7 +85,7 @@ final class StocksManager {
                 if let error = error  {
                     print(error)
                     print("Error in function called (searchCompanyLogo)")
-                    return
+                    completion(defaultLogo!)
                 }
                 if let safeData = data {
                     if let logo = UIImage(data: safeData){

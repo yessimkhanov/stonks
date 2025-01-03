@@ -72,6 +72,18 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return false
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { action, indexPath in
+            self.stocksPresenter.deleteCompany(index: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        return [deleteAction]
+    }
 }
 
 extension ViewController:TickerCellDelegate {
@@ -83,7 +95,6 @@ extension ViewController:TickerCellDelegate {
 extension ViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = ""
-        print("Editing ended")
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else {return false}
