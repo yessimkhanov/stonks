@@ -43,6 +43,7 @@
 		19F25EA52D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */; };
 		19F25EA62D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */; };
 		19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */; };
+		19F25EAB2D2C17D600FF02E6 /* PopularRequestsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EAA2D2C17D600FF02E6 /* PopularRequestsCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +85,7 @@
 		19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteCompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19F25EAA2D2C17D600FF02E6 /* PopularRequestsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularRequestsCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +123,7 @@
 				191E10812CFA29EB00EEEA9A /* ViewController.swift */,
 				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
 				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
+				19F25EAA2D2C17D600FF02E6 /* PopularRequestsCollectionViewCell.swift */,
 				191E10D12D11B38000EEEA9A /* StocksManager.swift */,
 				191E10892CFA29EE00EEEA9A /* Assets.xcassets */,
 				191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */,
@@ -272,6 +275,7 @@
 				191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */,
 				19F25EA52D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift in Sources */,
 				19F25EA62D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift in Sources */,
+				19F25EAB2D2C17D600FF02E6 /* PopularRequestsCollectionViewCell.swift in Sources */,
 				191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */,
 				191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */,
 				191E10D22D11B38000EEEA9A /* StocksManager.swift in Sources */,

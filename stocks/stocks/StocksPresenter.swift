@@ -18,6 +18,7 @@ protocol StocksPresenterProtocol: AnyObject {
     func companyForRow(at index: Int) -> Company
     func starButtonPressed(at index: Int, isFavourite: Bool)
     func addCompany(_ companyToAdd: String)
+    func numberOfRowsForCollectionView() -> Int
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
@@ -218,6 +219,10 @@ final class StocksPresenter: StocksPresenterProtocol {
         } catch {
             print("object doesn't updated")
         }
+    }
+    
+    func numberOfRowsForCollectionView() -> Int {
+        return 8
     }
 }
 

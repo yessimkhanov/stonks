@@ -14,4 +14,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
     </entity>
+    <entity name="RecentlySearchedCompanies" representedClassName="RecentlySearchedCompanies" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+    </entity>
 </model>

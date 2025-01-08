@@ -20,6 +20,8 @@ final class ViewController:UIViewController {
         stocksAppViews.tableView.delegate = self
         stocksAppViews.tableView.dataSource = self
         stocksAppViews.searchBar.delegate = self
+        stocksAppViews.popularRequestsCollectionView.delegate = self
+        stocksAppViews.popularRequestsCollectionView.dataSource = self
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
         return stocksAppViews
@@ -95,13 +97,27 @@ extension ViewController:TickerCellDelegate {
 extension ViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = ""
+        stocksAppViews.tableView.isHidden = false
+        stocksAppViews.buttonStack.isHidden = false
+        stocksAppViews.popularRequestsLabel.isHidden = true
+        stocksAppViews.userSearchRequestsLabel.isHidden = true
+        stocksAppViews.popularRequestsCollectionView.isHidden = true
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else {return false}
-        stocksPresenter.addCompany(text)
+        //MARK: убери коммент что бы серч заново находил компании с бэка
+//        stocksPresenter.addCompany(text)
         textField.resignFirstResponder()
         return true
     }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        stocksAppViews.tableView.isHidden = true
+        stocksAppViews.buttonStack.isHidden = true
+        stocksAppViews.popularRequestsLabel.isHidden = false
+        stocksAppViews.userSearchRequestsLabel.isHidden = false
+        stocksAppViews.popularRequestsCollectionView.isHidden = false
+    }
+    
 }
 
 extension ViewController:ViewProtocol {
@@ -122,5 +138,21 @@ extension ViewController:ViewProtocol {
             stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
             stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
         }
+    }
+}
+
+extension ViewController:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return stocksPresenter.numberOfRowsForCollectionView()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularRequestsCollectionViewCell.identifier, for: indexPath) as! PopularRequestsCollectionViewCell
+        cell.companyName.text = "Apple Inc."
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 75, height: 40)
     }
 }
