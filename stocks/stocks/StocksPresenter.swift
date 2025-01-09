@@ -18,11 +18,11 @@ protocol StocksPresenterProtocol: AnyObject {
     func companyForRow(at index: Int) -> Company
     func starButtonPressed(at index: Int, isFavourite: Bool)
     func addCompany(_ companyToAdd: String)
-    func numberOfRowsForCollectionView() -> Int
+    func getPopularCompany(at index: Int) -> String
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
-    
+    let popularRequestsCompanies: [String] = ["Apple", "Amazon", "Google", "Visa", "American Airlines LLC.", "Garmin LTD"]
     private weak var view: ViewProtocol?
     private var dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
@@ -221,8 +221,9 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
     }
     
-    func numberOfRowsForCollectionView() -> Int {
-        return 8
+    func getPopularCompany(at index: Int) -> String {
+        return popularRequestsCompanies[index]
     }
 }
+
 

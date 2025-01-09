@@ -12,16 +12,19 @@ protocol ViewProtocol: AnyObject {
     func updateButtonStyles(for state: StateOfButton)
 }
 
-final class ViewController:UIViewController {
+final class ViewController:UIViewController, StockViewDelegate {
+    func getPopularCompaniesName(at index: Int) -> String {
+        let text = stocksPresenter.getPopularCompany(at: index)
+        return text
+    }
+    
     var stocksPresenter: StocksPresenterProtocol!
-
     private lazy var stocksAppViews: StocksView = {
         let stocksAppViews = StocksView(frame: self.view.frame)
         stocksAppViews.tableView.delegate = self
         stocksAppViews.tableView.dataSource = self
         stocksAppViews.searchBar.delegate = self
-        stocksAppViews.popularRequestsCollectionView.delegate = self
-        stocksAppViews.popularRequestsCollectionView.dataSource = self
+        stocksAppViews.delegate = self
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
         return stocksAppViews
@@ -31,6 +34,7 @@ final class ViewController:UIViewController {
         super.viewDidLoad()
         view.addSubview(stocksAppViews)
         stocksPresenter.viewDidLoad()
+        stocksAppViews.createButtons()
     }
     
     @objc
@@ -101,7 +105,8 @@ extension ViewController:UITextFieldDelegate {
         stocksAppViews.buttonStack.isHidden = false
         stocksAppViews.popularRequestsLabel.isHidden = true
         stocksAppViews.userSearchRequestsLabel.isHidden = true
-        stocksAppViews.popularRequestsCollectionView.isHidden = true
+        stocksAppViews.scrollViewForPopularRequests.isHidden = true
+        stocksAppViews.scrollViewForPopularRequestsTwo.isHidden = true
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else {return false}
@@ -115,7 +120,8 @@ extension ViewController:UITextFieldDelegate {
         stocksAppViews.buttonStack.isHidden = true
         stocksAppViews.popularRequestsLabel.isHidden = false
         stocksAppViews.userSearchRequestsLabel.isHidden = false
-        stocksAppViews.popularRequestsCollectionView.isHidden = false
+        stocksAppViews.scrollViewForPopularRequests.isHidden = false
+        stocksAppViews.scrollViewForPopularRequestsTwo.isHidden = false
     }
     
 }
@@ -141,18 +147,3 @@ extension ViewController:ViewProtocol {
     }
 }
 
-extension ViewController:UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return stocksPresenter.numberOfRowsForCollectionView()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PopularRequestsCollectionViewCell.identifier, for: indexPath) as! PopularRequestsCollectionViewCell
-        cell.companyName.text = "Apple Inc."
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 75, height: 40)
-    }
-}

@@ -13,7 +13,7 @@ class PopularRequestsCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1A1A1A)
-        
+        label.numberOfLines = 0
         return label
     }()
     

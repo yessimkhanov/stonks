@@ -7,8 +7,14 @@
 import Foundation
 import UIKit
 
+protocol StockViewDelegate: AnyObject {
+    func getPopularCompaniesName(at index: Int) -> String
+}
+
 final class StocksView: UIView {
     //MARK: Main Screen's UI
+    weak var delegate: StockViewDelegate?
+    let popularRequestsCompanies: [String] = ["Apple", "Amazon", "Google", "Visa", "American Airlines LLC.", "Garmin LTD"]
     let searchBar: UITextField = {
         let searchBar = UITextField()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -82,15 +88,74 @@ final class StocksView: UIView {
         return label
     }()
     
-    let popularRequestsCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
-        collectionView.register(PopularRequestsCollectionViewCell.self, forCellWithReuseIdentifier: PopularRequestsCollectionViewCell.identifier)
-        collectionView.isHidden = true
-        return collectionView
+    let popularRequestsStackOne: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.spacing = 10
+        return stack
+    }()
+    func createButtons() {
+        for i in 0...5 {
+            let popularCompanyButton: UIButton = {
+                let button = UIButton()
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 12)
+                button.layer.cornerRadius = 15
+                button.titleLabel?.textAlignment = .center
+                button.setTitleColor(.black, for: .normal)
+                button.backgroundColor = UIColor(rgb: 0xF0F4F7)
+                button.clipsToBounds = true
+                return button
+            }()
+            
+            let second: UIButton = {
+                let button = UIButton()
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 12)
+                button.layer.cornerRadius = 15
+                button.titleLabel?.textAlignment = .center
+                button.setTitleColor(.black, for: .normal)
+                button.backgroundColor = UIColor(rgb: 0xF0F4F7)
+                button.clipsToBounds = true
+                return button
+            }()
+            
+            if let text = delegate?.getPopularCompaniesName(at: i) {
+                popularCompanyButton.setTitle(text, for: .normal)
+                second.setTitle(text, for: .normal)
+            }
+        
+            second.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+            popularCompanyButton.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
+            popularRequestsStackOne.addArrangedSubview(popularCompanyButton)
+            popularRequestsStackTwo.addArrangedSubview(second)
+        }
+    }
+    
+    let popularRequestsStackTwo: UIStackView = {
+        let stack = UIStackView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.spacing = 10
+        return stack
+    }()
+
+    
+    let scrollViewForPopularRequests: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isHidden = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
+    }()
+    
+    let scrollViewForPopularRequestsTwo: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isHidden = true
+        scrollView.showsHorizontalScrollIndicator = false
+        return scrollView
     }()
     
     //MARK: Initialization
@@ -101,8 +166,11 @@ final class StocksView: UIView {
         buttonStack.addArrangedSubview(favouriteButton)
         self.addSubview(buttonStack)
         self.addSubview(popularRequestsLabel)
-        self.addSubview(popularRequestsCollectionView)
         self.addSubview(userSearchRequestsLabel)
+        scrollViewForPopularRequests.addSubview(popularRequestsStackOne)
+        self.addSubview(scrollViewForPopularRequests)
+        scrollViewForPopularRequestsTwo.addSubview(popularRequestsStackTwo)
+        self.addSubview(scrollViewForPopularRequestsTwo)
     }
     
     private func setConstraints() {
@@ -129,13 +197,28 @@ final class StocksView: UIView {
             userSearchRequestsLabel.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 183),
             userSearchRequestsLabel.heightAnchor.constraint(equalToConstant: 24),
             
-            popularRequestsCollectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
-            popularRequestsCollectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 67),
-            popularRequestsCollectionView.bottomAnchor.constraint(
-                equalTo: userSearchRequestsLabel.topAnchor,
-                constant: -28
-            ),
-            popularRequestsCollectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            scrollViewForPopularRequests.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            scrollViewForPopularRequests.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 67),
+            scrollViewForPopularRequests.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            scrollViewForPopularRequests.heightAnchor.constraint(equalToConstant: 50),
+        
+            popularRequestsStackOne.leadingAnchor.constraint(equalTo: scrollViewForPopularRequests.leadingAnchor),
+            popularRequestsStackOne.trailingAnchor.constraint(equalTo: scrollViewForPopularRequests.trailingAnchor),
+            popularRequestsStackOne.topAnchor.constraint(equalTo: scrollViewForPopularRequests.topAnchor),
+            popularRequestsStackOne.bottomAnchor.constraint(equalTo: scrollViewForPopularRequests.bottomAnchor),
+            popularRequestsStackOne.heightAnchor.constraint(equalToConstant: 40),
+            
+            scrollViewForPopularRequestsTwo.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
+            scrollViewForPopularRequestsTwo.topAnchor.constraint(equalTo: scrollViewForPopularRequests.bottomAnchor, constant: 8),
+            scrollViewForPopularRequestsTwo.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            scrollViewForPopularRequestsTwo.heightAnchor.constraint(equalToConstant: 50),
+        
+            popularRequestsStackTwo.leadingAnchor.constraint(equalTo: scrollViewForPopularRequestsTwo.leadingAnchor),
+            popularRequestsStackTwo.trailingAnchor.constraint(equalTo: scrollViewForPopularRequestsTwo.trailingAnchor),
+            popularRequestsStackTwo.topAnchor.constraint(equalTo: scrollViewForPopularRequestsTwo.topAnchor),
+            popularRequestsStackTwo.bottomAnchor.constraint(equalTo: scrollViewForPopularRequestsTwo.bottomAnchor),
+            popularRequestsStackTwo.heightAnchor.constraint(equalToConstant: 40),
+
         ])
     }
     
