@@ -19,27 +19,27 @@ protocol StocksPresenterProtocol: AnyObject {
     func starButtonPressed(at index: Int, isFavourite: Bool)
     func addCompany(_ companyToAdd: String)
     func getPopularCompany(at index: Int) -> String
+    func renewInfoOfCompanies()
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
     let popularRequestsCompanies: [String] = ["Apple", "Amazon", "Google", "Visa", "American Airlines LLC.", "Garmin LTD"]
+    let companies: [String] = ["Apple", "Amazon", "American Airlines", "Garmin LTD", "Microsoft", "Twitter", "Nike", "Adidas", "PepsiCo", "Coca-Cola", "Procter & Gamble", "Johnson & Johnson", "ABT", "ADBE", "Nasdaq", "NYSE"]
     private weak var view: ViewProtocol?
     private var dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
-    private var manager: StocksManager
-    private var context: NSManagedObjectContext
-    private var companies: [CompanyItem] = []
-    private var favouriteCompanies: [FavouriteCompanyItem] = []
-    init(view: ViewProtocol, dataSource: CompanyDataSource, manager: StocksManager, context: NSManagedObjectContext) {
+    private var networkingManager: StocksManager
+    var coreDataManager: CoreDataManager
+    init(view: ViewProtocol, dataSource: CompanyDataSource, networkingManager: StocksManager, coreDataManager: CoreDataManager) {
         self.view = view
         self.dataSource = dataSource
-        self.manager = manager
-        self.context = context
+        self.networkingManager = networkingManager
+        self.coreDataManager = coreDataManager
     }
     
     func viewDidLoad() {
-        getAllCompanies()
-        getFavouriteCompanies()
+        coreDataManager.getAllCompanies()
+        coreDataManager.getFavouriteCompanies()
         view?.reloadTableView()
     }
     
@@ -57,31 +57,44 @@ final class StocksPresenter: StocksPresenterProtocol {
         view?.reloadTableView()
     }
     
+    func renewInfoOfCompanies() {
+        let dispatchGroup = DispatchGroup()
+        for company in coreDataManager.companies {
+            dispatchGroup.enter()
+            addCompany(company.name)
+            print("Company refreshed: \(company.name)")
+            dispatchGroup.leave()
+        }
+        dispatchGroup.notify(queue: .main) {
+            print("All companies added")
+        }
+    }
+    
     func numberOfRows() -> Int {
         switch currentState {
         case .stocks:
-            return companies.count
+            return coreDataManager.companies.count
         case .favourite:
-            return favouriteCompanies.count
+            return coreDataManager.favouriteCompanies.count
         }
     }
     
     func deleteCompany(index: Int) {
         switch currentState {
         case .stocks:
-            if companies[index].isFavourite {
-                if let favIndex = favouriteCompanies.firstIndex(where: { $0.name == companies[index].name }) {
-                    deleteItemFromFavourite(item: favouriteCompanies[favIndex], index: favIndex)
+            if coreDataManager.companies[index].isFavourite {
+                if let favIndex = coreDataManager.favouriteCompanies.firstIndex(where: { $0.name == coreDataManager.companies[index].name }) {
+                    coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[favIndex], index: favIndex)
                 }
             }
-            deleteItemFromCompanies(item: companies[index], index: index)
+            coreDataManager.deleteItemFromCompanies(item: coreDataManager.companies[index], index: index)
             
         case .favourite:
-            let favouriteItem = favouriteCompanies[index]
-            if let compIndex = companies.firstIndex(where: { $0.name == favouriteItem.name }) {
-                deleteItemFromCompanies(item: companies[compIndex], index: compIndex)
+            let favouriteItem = coreDataManager.favouriteCompanies[index]
+            if let compIndex = coreDataManager.companies.firstIndex(where: { $0.name == favouriteItem.name }) {
+                coreDataManager.deleteItemFromCompanies(item: coreDataManager.companies[compIndex], index: compIndex)
             }
-            deleteItemFromFavourite(item: favouriteItem, index: index)
+            coreDataManager.deleteItemFromFavourite(item: favouriteItem, index: index)
         }
     }
     
@@ -90,20 +103,22 @@ final class StocksPresenter: StocksPresenterProtocol {
         switch currentState {
         case .stocks:
             let companyToReturn = Company(
-                name: companies[index].name,
-                abbreviation: companies[index].abbreviation,
-                logo: companies[index].logo ?? UIImage(named: "Kaspi")!,
-                price: companies[index].price,
-                isFavourite: companies[index].isFavourite
+                name: coreDataManager.companies[index].name,
+                abbreviation: coreDataManager.companies[index].abbreviation,
+                logo: coreDataManager.companies[index].logo ?? UIImage(named: "Kaspi")!,
+                price: coreDataManager.companies[index].price,
+                isFavourite: coreDataManager.companies[index].isFavourite,
+                change: coreDataManager.companies[index].change
             )
             return companyToReturn
         case .favourite:
             let companyToReturn = Company(
-                name: favouriteCompanies[index].name,
-                abbreviation: favouriteCompanies[index].abbreviation,
-                logo: favouriteCompanies[index].logo ?? UIImage(named: "Kaspi")!,
-                price: favouriteCompanies[index].price,
-                isFavourite: favouriteCompanies[index].isFavourite
+                name: coreDataManager.favouriteCompanies[index].name,
+                abbreviation: coreDataManager.favouriteCompanies[index].abbreviation,
+                logo: coreDataManager.favouriteCompanies[index].logo ?? UIImage(named: "Kaspi")!,
+                price: coreDataManager.favouriteCompanies[index].price,
+                isFavourite: coreDataManager.favouriteCompanies[index].isFavourite,
+                change: coreDataManager.favouriteCompanies[index].change
             )
             return companyToReturn
         }
@@ -112,34 +127,40 @@ final class StocksPresenter: StocksPresenterProtocol {
     func starButtonPressed(at index: Int, isFavourite: Bool) {
         if isFavourite == false {
             guard currentState == .stocks else { return }
-            companies[index].isFavourite = true
-            createFavouriteItem(company: companies[index])
+            coreDataManager.companies[index].isFavourite = true
+            coreDataManager.createFavouriteItem(company: coreDataManager.companies[index])
         } else {
             switch currentState {
             case .stocks:
-                let company = companies[index]
-                if let favouriteIndex = favouriteCompanies.firstIndex(where: { $0.name == company.name }) {
-                    companies[index].isFavourite = false
-                    deleteItemFromFavourite(item: favouriteCompanies[favouriteIndex], index: favouriteIndex)
+                let company = coreDataManager.companies[index]
+                if let favouriteIndex = coreDataManager.favouriteCompanies.firstIndex(where: { $0.name == company.name }) {
+                    coreDataManager.companies[index].isFavourite = false
+                    coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[favouriteIndex], index: favouriteIndex)
                 }
                 
             case .favourite:
-                let company = favouriteCompanies[index]
-                if let stockIndex = companies.firstIndex(where: { $0.name == company.name }) {
-                    companies[stockIndex].isFavourite = false
+                let company = coreDataManager.favouriteCompanies[index]
+                if let stockIndex = coreDataManager.companies.firstIndex(where: { $0.name == company.name }) {
+                    coreDataManager.companies[stockIndex].isFavourite = false
                 }
-                deleteItemFromFavourite(item: favouriteCompanies[index], index: index)
+                coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[index], index: index)
             }
         }
         view?.reloadTableView()
     }
     func addCompany(_ companyToAdd: String) {
-        manager.addNewCompany(companyName: companyToAdd){ company in
-            if let stockIndex = self.companies.firstIndex(where: {$0.abbreviation == company.abbreviation}) {
-                self.companies[stockIndex].price = company.price
-                self.companies[stockIndex].logo = company.logo
+        networkingManager.addNewCompany(companyName: companyToAdd){ company in
+            if let stockIndex = self.coreDataManager.companies.firstIndex(where: {$0.abbreviation == company.abbreviation}) {
+                if let favouriteCompaniesIndex = self.coreDataManager.favouriteCompanies.firstIndex(where: {$0.name == company.name}) {
+                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].price = company.price
+                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].logo = company.logo
+                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].change = company.change
+                }
+                self.coreDataManager.companies[stockIndex].price = company.price
+                self.coreDataManager.companies[stockIndex].logo = company.logo
+                self.coreDataManager.companies[stockIndex].change = company.change
             } else {
-                self.createItem(company: company)
+                self.coreDataManager.createItem(company: company)
             }
             
             DispatchQueue.main.async {
@@ -148,81 +169,8 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
     }
     
-    private func createItem(company: Company) {
-        let newCompany = CompanyItem(context: context)
-        newCompany.name = company.name
-        newCompany.abbreviation = company.abbreviation
-        newCompany.logo = company.logo
-        newCompany.isFavourite = company.isFavourite
-        newCompany.price = company.price
-        companies.append(newCompany)
-        do {
-            try context.save()
-        } catch {
-            // error
-        }
-    }
-    
-    private func createFavouriteItem(company: CompanyItem) {
-        let newCompany = FavouriteCompanyItem(context: context)
-        newCompany.name = company.name
-        newCompany.abbreviation = company.abbreviation
-        newCompany.logo = company.logo
-        newCompany.isFavourite = company.isFavourite
-        newCompany.price = company.price
-        favouriteCompanies.append(newCompany)
-        do {
-            try context.save()
-        } catch {
-            // error
-        }
-    }
-    
-    private func deleteItemFromFavourite(item: FavouriteCompanyItem, index: Int) {
-        context.delete(item)
-        do {
-            try context.save()
-        } catch {
-            print("object does not deleted from coredata")
-        }
-        favouriteCompanies.remove(at: index)
-    }
-    
-    private func deleteItemFromCompanies(item: CompanyItem, index: Int) {
-        context.delete(item)
-        do {
-            try context.save()
-        } catch {
-            print("object does not deleted from coredata")
-        }
-        companies.remove(at: index)
-    }
-    
-    private func getAllCompanies() {
-        do {
-            companies = try context.fetch(CompanyItem.fetchRequest())
-        } catch {
-            print("Error in getAllItems, can not get items from database")
-        }
-    }
-    private func getFavouriteCompanies() {
-        do {
-            favouriteCompanies = try context.fetch(FavouriteCompanyItem.fetchRequest())
-        } catch {
-            print("Error in getAllItems, can not get items from database")
-        }
-    }
-    
-    private func updateItem() {
-        do {
-            try context.save()
-        } catch {
-            print("object doesn't updated")
-        }
-    }
-    
     func getPopularCompany(at index: Int) -> String {
-        return popularRequestsCompanies[index]
+        return coreDataManager.companies[index].name
     }
 }
 

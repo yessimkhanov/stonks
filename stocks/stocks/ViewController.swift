@@ -12,19 +12,20 @@ protocol ViewProtocol: AnyObject {
     func updateButtonStyles(for state: StateOfButton)
 }
 
-final class ViewController:UIViewController, StockViewDelegate {
-    func getPopularCompaniesName(at index: Int) -> String {
-        let text = stocksPresenter.getPopularCompany(at: index)
-        return text
-    }
-    
+enum ScreenState {
+    case mainScreen
+    case searchScreen
+}
+
+final class ViewController:UIViewController {
     var stocksPresenter: StocksPresenterProtocol!
+    var screenState: ScreenState = .mainScreen
     private lazy var stocksAppViews: StocksView = {
         let stocksAppViews = StocksView(frame: self.view.frame)
         stocksAppViews.tableView.delegate = self
         stocksAppViews.tableView.dataSource = self
         stocksAppViews.searchBar.delegate = self
-        stocksAppViews.delegate = self
+        stocksAppViews.searchView.delegate = self
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
         return stocksAppViews
@@ -34,7 +35,7 @@ final class ViewController:UIViewController, StockViewDelegate {
         super.viewDidLoad()
         view.addSubview(stocksAppViews)
         stocksPresenter.viewDidLoad()
-        stocksAppViews.createButtons()
+        stocksAppViews.searchView.createButtons()
     }
     
     @objc
@@ -65,7 +66,8 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
             price: company.price,
             background: backgroundColor,
             isFavourite: company.isFavourite,
-            indexPath: indexPath.row
+            indexPath: indexPath.row,
+            change: company.change
         )
         
         return cell
@@ -87,6 +89,9 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
         let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { action, indexPath in
             self.stocksPresenter.deleteCompany(index: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                tableView.reloadData()
+            }
         }
         return [deleteAction]
     }
@@ -101,27 +106,20 @@ extension ViewController:TickerCellDelegate {
 extension ViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = ""
-        stocksAppViews.tableView.isHidden = false
-        stocksAppViews.buttonStack.isHidden = false
-        stocksAppViews.popularRequestsLabel.isHidden = true
-        stocksAppViews.userSearchRequestsLabel.isHidden = true
-        stocksAppViews.scrollViewForPopularRequests.isHidden = true
-        stocksAppViews.scrollViewForPopularRequestsTwo.isHidden = true
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        guard let text = textField.text else {return false}
+        guard let text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
+            switchViews()
+            return true
+        }
         //MARK: убери коммент что бы серч заново находил компании с бэка
-//        stocksPresenter.addCompany(text)
-        textField.resignFirstResponder()
+        stocksPresenter.addCompany(text)
+        stocksPresenter.renewInfoOfCompanies()
+        switchViews()
         return true
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        stocksAppViews.tableView.isHidden = true
-        stocksAppViews.buttonStack.isHidden = true
-        stocksAppViews.popularRequestsLabel.isHidden = false
-        stocksAppViews.userSearchRequestsLabel.isHidden = false
-        stocksAppViews.scrollViewForPopularRequests.isHidden = false
-        stocksAppViews.scrollViewForPopularRequestsTwo.isHidden = false
+        switchViews()
     }
     
 }
@@ -143,6 +141,39 @@ extension ViewController:ViewProtocol {
             stocksAppViews.stocksButton.titleLabel?.font = UIFont(name: "Montserrat-Bold", size: 18)
             stocksAppViews.favouriteButton.setTitleColor(UIColor(rgb: 0x1A1A1A), for: .normal)
             stocksAppViews.stocksButton.setTitleColor(UIColor(rgb: 0xBABABA), for: .normal)
+        }
+    }
+}
+
+extension ViewController: StockViewDelegate {
+    func returnToPreviousScreen() {
+        switchViews()
+    }
+    
+    func getPopularCompaniesName(at index: Int) -> String {
+        let text = stocksPresenter.getPopularCompany(at: index)
+        return text
+    }
+    
+    func bubbleButtonPressed(name: String) {
+        stocksPresenter.addCompany(name)
+        switchViews()
+        stocksAppViews.searchBar.resignFirstResponder()
+    }
+    
+    func switchViews() {
+        switch screenState {
+        case .mainScreen:
+            screenState = .searchScreen
+            stocksAppViews.searchView.isHidden = false
+            stocksAppViews.tableView.isHidden = true
+            stocksAppViews.buttonStack.isHidden = true
+        case .searchScreen:
+            screenState = .mainScreen
+            stocksAppViews.searchView.isHidden = true
+            stocksAppViews.tableView.isHidden = false
+            stocksAppViews.buttonStack.isHidden = false
+            stocksAppViews.searchBar.resignFirstResponder()
         }
     }
 }

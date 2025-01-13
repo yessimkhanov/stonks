@@ -14,6 +14,7 @@ struct Company {
     var logo: UIImage = UIImage()
     var price: Double = 0.0
     var isFavourite: Bool = false
+    var change: String = ""
 }
 struct CompanyDataSource {
     var companies: [Company] = [
@@ -27,6 +28,8 @@ struct CompanyDataSource {
 // MARK: Companies from the internet
 struct CompanyPrice: Decodable {
     let c: Double
+    let d: Double
+    let dp: Double
 }
 
 struct CompanyJSON: Decodable {

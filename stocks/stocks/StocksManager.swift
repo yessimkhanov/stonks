@@ -14,12 +14,18 @@ final class StocksManager {
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
         searchCompany(companyName) { company in
+            guard let company = company else {
+                print("Company not found: \(companyName)")
+                dispatchGroup.leave()
+                return
+            }
             newCompany.abbreviation = company.displaySymbol
             newCompany.name = company.description
             
             dispatchGroup.enter()
-            self.searchCompanyPrice(company.displaySymbol) { currentPrice in
+            self.searchCompanyPrice(company.displaySymbol) { currentPrice, change in
                 newCompany.price = currentPrice
+                newCompany.change = change
                 dispatchGroup.leave()
             }
             
@@ -36,7 +42,7 @@ final class StocksManager {
         }
     }
     
-    private func searchCompanyPrice(_ abbreviation: String, completion: @escaping(Double) -> Void) {
+    private func searchCompanyPrice(_ abbreviation: String, completion: @escaping(Double, String) -> Void) {
         let newURL = "https://finnhub.io/api/v1/quote?symbol=\(abbreviation)&token=ct6q70pr01qmbqosg59gct6q70pr01qmbqosg5a0"
         if let url = URL(string: newURL){
             let session = URLSession(configuration: .default)
@@ -48,7 +54,11 @@ final class StocksManager {
                 }
                 if let safeData = data {
                     if let data = self.parseJSONPrice(safeData){
-                        completion(data.c)
+                        let currentPrice = data.c
+                        let priceChange = data.d
+                        let priceChangePercentage = (data.dp * 100).rounded() / 100
+                        let change: String = priceChangePercentage >= 0 ? "+$\(abs(priceChange)) (\(abs(priceChangePercentage))%)" : "-$\(abs(priceChange)) (\(abs(priceChangePercentage))%)"
+                        completion(currentPrice, change)
                     }
                 }
             }
@@ -56,7 +66,7 @@ final class StocksManager {
         }
     }
     
-    private func searchCompany(_ company: String, completion: @escaping(Results) -> Void){
+    private func searchCompany(_ company: String, completion: @escaping(Results?) -> Void){
         let newURL = "https://finnhub.io/api/v1/search?q=\(company)&exchange=US&token=ct6q70pr01qmbqosg59gct6q70pr01qmbqosg5a0"
         if let url = URL(string: newURL){
             let session = URLSession(configuration: .default)
@@ -68,7 +78,12 @@ final class StocksManager {
                 }
                 if let safeData = data {
                     if let data = self.parseJSONCompany(safeData){
-                        completion(data.result[0])
+                        if !data.result.isEmpty {
+                            completion(data.result[0])
+                        } else {
+                            print("No results found for company: \(company)")
+                            completion(nil)
+                        }
                     }
                 }
             }

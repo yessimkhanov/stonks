@@ -43,6 +43,7 @@ final class TickerCell: UITableViewCell {
         let label = UILabel()
         label.text = ""
         label.font = UIFont(name: "Montserrat-Bold", size: 18)
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,6 +55,16 @@ final class TickerCell: UITableViewCell {
         button.tintColor = .systemGray
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    private let change: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont(name: "Montserrat", size: 12)
+        label.textColor = UIColor(rgb: 0x24B25D)
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -89,15 +100,23 @@ final class TickerCell: UITableViewCell {
             name.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: 12),
             name.heightAnchor.constraint(equalToConstant: 16),
             name.topAnchor.constraint(equalTo: abbreviature.bottomAnchor, constant: 0),
+            name.widthAnchor.constraint(equalToConstant: 189),
             
             price.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -17),
-            price.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            price.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 248),
+            price.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 14),
             price.heightAnchor.constraint(equalToConstant: 24),
             
             starButton.leadingAnchor.constraint(equalTo: abbreviature.trailingAnchor, constant: 6),
             starButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 17),
             starButton.heightAnchor.constraint(equalToConstant: 16),
             starButton.widthAnchor.constraint(equalToConstant: 16),
+            
+            change.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant:238),
+            change.topAnchor.constraint(equalTo: contentView.topAnchor, constant:38),
+            change.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -14),
+            change.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -12),
+            change.heightAnchor.constraint(equalToConstant: 16),
         ])
     }
     
@@ -107,6 +126,7 @@ final class TickerCell: UITableViewCell {
         contentView.addSubview(abbreviature)
         contentView.addSubview(price)
         contentView.addSubview(starButton)
+        contentView.addSubview(change)
     }
     
     private func addTargets() {
@@ -120,7 +140,8 @@ final class TickerCell: UITableViewCell {
         price: Double,
         background : UIColor,
         isFavourite: Bool,
-        indexPath: Int
+        indexPath: Int,
+        change: String
     ) {
         self.logo.image = logo
         self.name.text = name
@@ -131,6 +152,8 @@ final class TickerCell: UITableViewCell {
         self.isFavourite = isFavourite
         self.starButton.tintColor = UIColor(rgb: isFavourite ? 0xFFCA1C : 0xBABABA)
         self.indexPath = indexPath
+        self.change.text = change
+        self.change.textColor = change.charAt(0) == "-" ? UIColor(rgb: 0xB22424) : UIColor(rgb: 0x24B25D)
     }
     
     @objc

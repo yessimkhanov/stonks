@@ -20,13 +20,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let mainVC = ViewController()
         let stocksDataSource = CompanyDataSource()
-        let manager = StocksManager()
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let networkingManager = StocksManager()
+        let coreDataManager = CoreDataManager()
         let stocksPresenter = StocksPresenter(
             view: mainVC,
             dataSource: stocksDataSource,
-            manager: manager,
-            context: context
+            networkingManager: networkingManager,
+            coreDataManager: coreDataManager
         )
         mainVC.stocksPresenter = stocksPresenter
         

@@ -11,28 +11,29 @@ import CoreData
 import UIKit
 
 extension FavouriteCompanyItem {
-
+    
     @nonobjc public class func fetchRequest() -> NSFetchRequest<FavouriteCompanyItem> {
         return NSFetchRequest<FavouriteCompanyItem>(entityName: "FavouriteCompanyItem")
     }
-
+    
     @NSManaged public var name: String
     @NSManaged public var abbreviation: String
     @NSManaged public var logoData: Data
     @NSManaged public var price: Double
     @NSManaged public var isFavourite: Bool
+    @NSManaged public var change: String
     
     var logo: UIImage? {
-            get {
-                guard let data = logoData as Data? else { return nil }
-                return UIImage(data: data)
-            }
-            set {
-                logoData = newValue?.pngData() ?? Data()
-            }
+        get {
+            guard let data = logoData as Data? else { return nil }
+            return UIImage(data: data)
         }
+        set {
+            logoData = newValue?.pngData() ?? Data()
+        }
+    }
 }
 
 extension FavouriteCompanyItem : Identifiable {
-
+    
 }
