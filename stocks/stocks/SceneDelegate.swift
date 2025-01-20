@@ -18,13 +18,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let mainVC = ViewController()
+        let mainVC = StocksViewController()
         let stocksDataSource = CompanyDataSource()
-        let stocksPresenter = StocksPresenter(view: mainVC, dataSource: stocksDataSource)
+        let networkingManager = StocksManager()
+        let coreDataManager = CoreDataManager()
+        let stocksPresenter = StocksPresenter(
+            view: mainVC,
+            dataSource: stocksDataSource,
+            networkingManager: networkingManager,
+            coreDataManager: coreDataManager
+        )
         mainVC.stocksPresenter = stocksPresenter
         
         let window = UIWindow(windowScene: windowScene)
-//        let navController = UINavigationController(rootViewController: mainVC) 
         window.rootViewController = mainVC
         self.window = window
         self.window?.makeKeyAndVisible()

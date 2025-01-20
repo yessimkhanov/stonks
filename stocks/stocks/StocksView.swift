@@ -8,6 +8,7 @@ import Foundation
 import UIKit
 
 final class StocksView: UIView {
+    //MARK: Main Screen's UI
     let searchBar: UITextField = {
         let searchBar = UITextField()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
@@ -19,8 +20,8 @@ final class StocksView: UIView {
         searchBar.attributedPlaceholder = NSAttributedString(
             string: "Find Company or Ticker",
             attributes: [
-                .font: UIFont.systemFont(ofSize: 18), // Custom font size
-                .foregroundColor: UIColor.black   // Optional: Change placeholder color
+                .font: UIFont.systemFont(ofSize: 18),
+                .foregroundColor: UIColor.black
             ]
         )
         return searchBar
@@ -30,6 +31,7 @@ final class StocksView: UIView {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TickerCell.self, forCellReuseIdentifier: "Cell")
+        tableView.showsVerticalScrollIndicator = false
         return tableView
     }()
     
@@ -59,12 +61,21 @@ final class StocksView: UIView {
         return stack
     }()
     
+    lazy var searchView: SearchView = {
+        let view = SearchView(frame: self.frame)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
+    
+    //MARK: Initialization
     private func addSubviews() {
         self.addSubview(searchBar)
         self.addSubview(tableView)
         buttonStack.addArrangedSubview(stocksButton)
         buttonStack.addArrangedSubview(favouriteButton)
         self.addSubview(buttonStack)
+        self.addSubview(searchView)
     }
     
     private func setConstraints() {
@@ -81,7 +92,12 @@ final class StocksView: UIView {
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -16),
             tableView.topAnchor.constraint(equalTo: stocksButton.bottomAnchor, constant: 20),
-            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            searchView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 0),
+            searchView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 0),
+            searchView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 0),
+            searchView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])
     }
     
@@ -93,7 +109,7 @@ final class StocksView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("Error in initializing the BMIView")
+        fatalError("Error in initializing the StocksView")
     }
 }
 

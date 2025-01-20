@@ -12,14 +12,20 @@ protocol ViewProtocol: AnyObject {
     func updateButtonStyles(for state: StateOfButton)
 }
 
-final class ViewController:UIViewController {
-    var stocksPresenter: StocksPresenterProtocol!
+enum ScreenState {
+    case mainScreen
+    case searchScreen
+}
 
+final class StocksViewController:UIViewController {
+    var stocksPresenter: StocksPresenterProtocol!
+    var screenState: ScreenState = .mainScreen
     private lazy var stocksAppViews: StocksView = {
         let stocksAppViews = StocksView(frame: self.view.frame)
         stocksAppViews.tableView.delegate = self
         stocksAppViews.tableView.dataSource = self
         stocksAppViews.searchBar.delegate = self
+        stocksAppViews.searchView.delegate = self
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
         return stocksAppViews
@@ -29,7 +35,7 @@ final class ViewController:UIViewController {
         super.viewDidLoad()
         view.addSubview(stocksAppViews)
         stocksPresenter.viewDidLoad()
-//        self.navigationController?.navigationBar.isTranslucent = false
+        stocksAppViews.searchView.createButtons()
     }
     
     @objc
@@ -41,9 +47,25 @@ final class ViewController:UIViewController {
     private func favouriteButtonPressed() {
         stocksPresenter.favouriteButtonPressed()
     }
+    
+    private func switchViews() {
+        switch screenState {
+        case .mainScreen:
+            screenState = .searchScreen
+            stocksAppViews.searchView.isHidden = false
+            stocksAppViews.tableView.isHidden = true
+            stocksAppViews.buttonStack.isHidden = true
+        case .searchScreen:
+            screenState = .mainScreen
+            stocksAppViews.searchView.isHidden = true
+            stocksAppViews.tableView.isHidden = false
+            stocksAppViews.buttonStack.isHidden = false
+            stocksAppViews.searchBar.resignFirstResponder()
+        }
+    }
 }
 
-extension ViewController:UITableViewDelegate, UITableViewDataSource {
+extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stocksPresenter.numberOfRows()
     }
@@ -60,7 +82,9 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
             price: company.price,
             background: backgroundColor,
             isFavourite: company.isFavourite,
-            indexPath: indexPath.row)
+            indexPath: indexPath.row,
+            change: company.change
+        )
         
         return cell
     }
@@ -72,32 +96,51 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         return false
     }
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete") { action, indexPath in
+            self.stocksPresenter.deleteCompany(index: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                tableView.reloadData()
+            }
+        }
+        return [deleteAction]
+    }
 }
 
-extension ViewController:TickerCellDelegate {
+extension StocksViewController:TickerCellDelegate {
     func starButtonPressed(at index: Int, for state: Bool) {
         stocksPresenter.starButtonPressed(at: index, isFavourite: state)
     }
 }
 
-extension ViewController:UITextFieldDelegate {
+extension StocksViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = ""
-        print("Editing ended")
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        print("User input: \(textField.text ?? "")")
-        if(stocksPresenter.addCompany(textField.text ?? "")){
-            print("Everything is good")
-        } else {
-            print("OHHHH SHIT")
+        guard let text = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !text.isEmpty else {
+            switchViews()
+            return true
         }
-        textField.resignFirstResponder() // Dismiss the keyboard
+        //MARK: убери коммент что бы серч заново находил компании с бэка
+        stocksPresenter.addCompany(text)
+        stocksPresenter.renewInfoOfCompanies()
+        switchViews()
         return true
     }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        switchViews()
+    }
+    
 }
 
-extension ViewController:ViewProtocol {
+extension StocksViewController:ViewProtocol {
     func reloadTableView() {
         stocksAppViews.tableView.reloadData()
     }
@@ -117,3 +160,21 @@ extension ViewController:ViewProtocol {
         }
     }
 }
+
+extension StocksViewController: StockViewDelegate {
+    func returnToPreviousScreen() {
+        switchViews()
+    }
+    
+    func getPopularCompaniesName(at index: Int) -> String {
+        let text = stocksPresenter.getPopularCompany(at: index)
+        return text
+    }
+    
+    func bubbleButtonPressed(name: String) {
+        stocksPresenter.addCompany(name)
+        switchViews()
+        stocksAppViews.searchBar.resignFirstResponder()
+    }
+}
+
