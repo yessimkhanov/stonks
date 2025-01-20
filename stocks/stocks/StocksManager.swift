@@ -8,34 +8,38 @@
 import Foundation
 import UIKit
 
-final class StocksManager {    
+enum NetworkError: Error {
+    case noSuchCompany
+}
+
+final class StocksManager {
     func addNewCompany(companyName: String, completion: @escaping(Company) -> Void){
         var newCompany = Company()
         let dispatchGroup = DispatchGroup()
         dispatchGroup.enter()
-        searchCompany(companyName) { company in
-            guard let company = company else {
-                print("Company not found: \(companyName)")
-                dispatchGroup.leave()
-                return
+        searchCompany(companyName) { result in
+            switch result {
+            case .success(let company):
+                    newCompany.abbreviation = company.displaySymbol
+                    newCompany.name = company.description
+                    
+                    dispatchGroup.enter()
+                    self.searchCompanyPrice(company.displaySymbol) { currentPrice, change in
+                        newCompany.price = currentPrice
+                        newCompany.change = change
+                        dispatchGroup.leave()
+                    }
+                    
+                    dispatchGroup.enter()
+                    self.searchCompanyLogo(company.displaySymbol) { image in
+                        newCompany.logo = image
+                        dispatchGroup.leave()
+                    }
+                    
+                    dispatchGroup.leave()
+            case .failure(let error):
+                print("Error in addNewCompany function")
             }
-            newCompany.abbreviation = company.displaySymbol
-            newCompany.name = company.description
-            
-            dispatchGroup.enter()
-            self.searchCompanyPrice(company.displaySymbol) { currentPrice, change in
-                newCompany.price = currentPrice
-                newCompany.change = change
-                dispatchGroup.leave()
-            }
-            
-            dispatchGroup.enter()
-            self.searchCompanyLogo(company.displaySymbol) { image in
-                newCompany.logo = image
-                dispatchGroup.leave()
-            }
-            
-            dispatchGroup.leave()
         }
         dispatchGroup.notify(queue: .main) {
             completion(newCompany)
@@ -66,7 +70,7 @@ final class StocksManager {
         }
     }
     
-    private func searchCompany(_ company: String, completion: @escaping(Results?) -> Void){
+    private func searchCompany(_ company: String, completion: @escaping(Result<Results, NetworkError>) -> Void){
         let newURL = "https://finnhub.io/api/v1/search?q=\(company)&exchange=US&token=ct6q70pr01qmbqosg59gct6q70pr01qmbqosg5a0"
         if let url = URL(string: newURL){
             let session = URLSession(configuration: .default)
@@ -79,10 +83,10 @@ final class StocksManager {
                 if let safeData = data {
                     if let data = self.parseJSONCompany(safeData){
                         if !data.result.isEmpty {
-                            completion(data.result[0])
+                            completion(.success(data.result[0]))
                         } else {
                             print("No results found for company: \(company)")
-                            completion(nil)
+                            completion(.failure(.noSuchCompany))
                         }
                     }
                 }

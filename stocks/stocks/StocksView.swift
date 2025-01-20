@@ -9,7 +9,6 @@ import UIKit
 
 final class StocksView: UIView {
     //MARK: Main Screen's UI
-
     let searchBar: UITextField = {
         let searchBar = UITextField()
         searchBar.translatesAutoresizingMaskIntoConstraints = false

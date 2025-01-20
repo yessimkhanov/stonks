@@ -17,7 +17,7 @@ enum ScreenState {
     case searchScreen
 }
 
-final class ViewController:UIViewController {
+final class StocksViewController:UIViewController {
     var stocksPresenter: StocksPresenterProtocol!
     var screenState: ScreenState = .mainScreen
     private lazy var stocksAppViews: StocksView = {
@@ -47,9 +47,25 @@ final class ViewController:UIViewController {
     private func favouriteButtonPressed() {
         stocksPresenter.favouriteButtonPressed()
     }
+    
+    private func switchViews() {
+        switch screenState {
+        case .mainScreen:
+            screenState = .searchScreen
+            stocksAppViews.searchView.isHidden = false
+            stocksAppViews.tableView.isHidden = true
+            stocksAppViews.buttonStack.isHidden = true
+        case .searchScreen:
+            screenState = .mainScreen
+            stocksAppViews.searchView.isHidden = true
+            stocksAppViews.tableView.isHidden = false
+            stocksAppViews.buttonStack.isHidden = false
+            stocksAppViews.searchBar.resignFirstResponder()
+        }
+    }
 }
 
-extension ViewController:UITableViewDelegate, UITableViewDataSource {
+extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return stocksPresenter.numberOfRows()
     }
@@ -97,13 +113,13 @@ extension ViewController:UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ViewController:TickerCellDelegate {
+extension StocksViewController:TickerCellDelegate {
     func starButtonPressed(at index: Int, for state: Bool) {
         stocksPresenter.starButtonPressed(at: index, isFavourite: state)
     }
 }
 
-extension ViewController:UITextFieldDelegate {
+extension StocksViewController:UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = ""
     }
@@ -124,7 +140,7 @@ extension ViewController:UITextFieldDelegate {
     
 }
 
-extension ViewController:ViewProtocol {
+extension StocksViewController:ViewProtocol {
     func reloadTableView() {
         stocksAppViews.tableView.reloadData()
     }
@@ -145,7 +161,7 @@ extension ViewController:ViewProtocol {
     }
 }
 
-extension ViewController: StockViewDelegate {
+extension StocksViewController: StockViewDelegate {
     func returnToPreviousScreen() {
         switchViews()
     }
@@ -159,22 +175,6 @@ extension ViewController: StockViewDelegate {
         stocksPresenter.addCompany(name)
         switchViews()
         stocksAppViews.searchBar.resignFirstResponder()
-    }
-    
-    func switchViews() {
-        switch screenState {
-        case .mainScreen:
-            screenState = .searchScreen
-            stocksAppViews.searchView.isHidden = false
-            stocksAppViews.tableView.isHidden = true
-            stocksAppViews.buttonStack.isHidden = true
-        case .searchScreen:
-            screenState = .mainScreen
-            stocksAppViews.searchView.isHidden = true
-            stocksAppViews.tableView.isHidden = false
-            stocksAppViews.buttonStack.isHidden = false
-            stocksAppViews.searchBar.resignFirstResponder()
-        }
     }
 }
 

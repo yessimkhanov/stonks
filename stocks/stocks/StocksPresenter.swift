@@ -23,13 +23,13 @@ protocol StocksPresenterProtocol: AnyObject {
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
-    let popularRequestsCompanies: [String] = ["Apple", "Amazon", "Google", "Visa", "American Airlines LLC.", "Garmin LTD"]
-    let companies: [String] = ["Apple", "Amazon", "American Airlines", "Garmin LTD", "Microsoft", "Twitter", "Nike", "Adidas", "PepsiCo", "Coca-Cola", "Procter & Gamble", "Johnson & Johnson", "ABT", "ADBE", "Nasdaq", "NYSE"]
+    
     private weak var view: ViewProtocol?
-    private var dataSource: CompanyDataSource
+    private let dataSource: CompanyDataSource
     var currentState: StateOfButton = .stocks
-    private var networkingManager: StocksManager
-    var coreDataManager: CoreDataManager
+    private let networkingManager: StocksManager
+    private let coreDataManager: CoreDataManager
+    
     init(view: ViewProtocol, dataSource: CompanyDataSource, networkingManager: StocksManager, coreDataManager: CoreDataManager) {
         self.view = view
         self.dataSource = dataSource
@@ -58,15 +58,9 @@ final class StocksPresenter: StocksPresenterProtocol {
     }
     
     func renewInfoOfCompanies() {
-        let dispatchGroup = DispatchGroup()
         for company in coreDataManager.companies {
-            dispatchGroup.enter()
             addCompany(company.name)
             print("Company refreshed: \(company.name)")
-            dispatchGroup.leave()
-        }
-        dispatchGroup.notify(queue: .main) {
-            print("All companies added")
         }
     }
     
@@ -148,19 +142,22 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
         view?.reloadTableView()
     }
+    
     func addCompany(_ companyToAdd: String) {
-        networkingManager.addNewCompany(companyName: companyToAdd){ company in
-            if let stockIndex = self.coreDataManager.companies.firstIndex(where: {$0.abbreviation == company.abbreviation}) {
-                if let favouriteCompaniesIndex = self.coreDataManager.favouriteCompanies.firstIndex(where: {$0.name == company.name}) {
-                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].price = company.price
-                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].logo = company.logo
-                    self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex].change = company.change
+        networkingManager.addNewCompany(companyName: companyToAdd){ newCompany in
+            if let stockIndex = self.coreDataManager.companies.firstIndex(where: {$0.abbreviation == newCompany.abbreviation}) {
+                var company = self.coreDataManager.companies[stockIndex]
+                if let favouriteCompaniesIndex = self.coreDataManager.favouriteCompanies.firstIndex(where: {$0.name == newCompany.name}) {
+                    var favouriteCompany = self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex]
+                    favouriteCompany.price = newCompany.price
+                    favouriteCompany.logo = newCompany.logo
+                    favouriteCompany.change = newCompany.change
                 }
-                self.coreDataManager.companies[stockIndex].price = company.price
-                self.coreDataManager.companies[stockIndex].logo = company.logo
-                self.coreDataManager.companies[stockIndex].change = company.change
+                company.price = newCompany.price
+                company.logo = newCompany.logo
+                company.change = newCompany.change
             } else {
-                self.coreDataManager.createItem(company: company)
+                self.coreDataManager.createItem(company: newCompany)
             }
             
             DispatchQueue.main.async {

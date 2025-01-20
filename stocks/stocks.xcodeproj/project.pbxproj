@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E107D2CFA29EB00EEEA9A /* AppDelegate.swift */; };
 		191E10802CFA29EB00EEEA9A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E107F2CFA29EB00EEEA9A /* SceneDelegate.swift */; };
-		191E10822CFA29EB00EEEA9A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10812CFA29EB00EEEA9A /* ViewController.swift */; };
+		191E10822CFA29EB00EEEA9A /* StocksViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10812CFA29EB00EEEA9A /* StocksViewController.swift */; };
 		191E10882CFA29EB00EEEA9A /* stocks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */; };
 		191E108A2CFA29EE00EEEA9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 191E10892CFA29EE00EEEA9A /* Assets.xcassets */; };
 		191E108D2CFA29EE00EEEA9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */; };
@@ -52,7 +52,7 @@
 		191E107A2CFA29EB00EEEA9A /* stocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = stocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		191E107D2CFA29EB00EEEA9A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		191E107F2CFA29EB00EEEA9A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		191E10812CFA29EB00EEEA9A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		191E10812CFA29EB00EEEA9A /* StocksViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksViewController.swift; sourceTree = "<group>"; };
 		191E10872CFA29EB00EEEA9A /* stocks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = stocks.xcdatamodel; sourceTree = "<group>"; };
 		191E10892CFA29EE00EEEA9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		191E108C2CFA29EE00EEEA9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 			children = (
 				191E107D2CFA29EB00EEEA9A /* AppDelegate.swift */,
 				191E107F2CFA29EB00EEEA9A /* SceneDelegate.swift */,
-				191E10812CFA29EB00EEEA9A /* ViewController.swift */,
+				191E10812CFA29EB00EEEA9A /* StocksViewController.swift */,
 				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
 				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
 				E8B2C0EF2D3261C000D06D3C /* ChartView.swift */,
@@ -273,7 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */,
-				191E10822CFA29EB00EEEA9A /* ViewController.swift in Sources */,
+				191E10822CFA29EB00EEEA9A /* StocksViewController.swift in Sources */,
 				191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */,
 				19F25EA42D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift in Sources */,
 				191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */,
