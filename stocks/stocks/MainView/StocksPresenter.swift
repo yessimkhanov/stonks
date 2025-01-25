@@ -146,9 +146,9 @@ final class StocksPresenter: StocksPresenterProtocol {
     func addCompany(_ companyToAdd: String) {
         networkingManager.addNewCompany(companyName: companyToAdd){ newCompany in
             if let stockIndex = self.coreDataManager.companies.firstIndex(where: {$0.abbreviation == newCompany.abbreviation}) {
-                var company = self.coreDataManager.companies[stockIndex]
+                let company = self.coreDataManager.companies[stockIndex]
                 if let favouriteCompaniesIndex = self.coreDataManager.favouriteCompanies.firstIndex(where: {$0.name == newCompany.name}) {
-                    var favouriteCompany = self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex]
+                    let favouriteCompany = self.coreDataManager.favouriteCompanies[favouriteCompaniesIndex]
                     favouriteCompany.price = newCompany.price
                     favouriteCompany.logo = newCompany.logo
                     favouriteCompany.change = newCompany.change

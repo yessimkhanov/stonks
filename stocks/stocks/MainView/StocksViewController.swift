@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 protocol ViewProtocol: AnyObject {
     func reloadTableView()
@@ -28,6 +29,7 @@ final class StocksViewController:UIViewController {
         stocksAppViews.searchView.delegate = self
         stocksAppViews.stocksButton.addTarget(self, action: #selector(stocksButtonPressed), for: .touchUpInside)
         stocksAppViews.favouriteButton.addTarget(self, action: #selector(favouriteButtonPressed), for: .touchUpInside)
+        stocksAppViews.tableView.refreshControl?.addTarget(self, action: #selector(renewInfoOfCompanies), for: .valueChanged)
         return stocksAppViews
     }()
     
@@ -46,6 +48,14 @@ final class StocksViewController:UIViewController {
     @objc
     private func favouriteButtonPressed() {
         stocksPresenter.favouriteButtonPressed()
+    }
+    
+    @objc
+    private func renewInfoOfCompanies() {
+        stocksPresenter.renewInfoOfCompanies()
+        DispatchQueue.main.async {
+            self.stocksAppViews.tableView.refreshControl?.endRefreshing()
+        }
     }
     
     private func switchViews() {
@@ -94,7 +104,7 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -110,6 +120,18 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
             }
         }
         return [deleteAction]
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let store: ChartsStore = ChartsStore(presenter: stocksPresenter, index: indexPath.row)
+        let chartsView = ChartView(store: store)
+        let hostingController = UIHostingController(rootView: chartsView)
+        hostingController.modalPresentationStyle = .fullScreen
+        self.present(hostingController, animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.stocksAppViews.tableView.deselectRow(at: indexPath, animated: true)
+        }
+
     }
 }
 
@@ -128,9 +150,7 @@ extension StocksViewController:UITextFieldDelegate {
             switchViews()
             return true
         }
-        //MARK: убери коммент что бы серч заново находил компании с бэка
         stocksPresenter.addCompany(text)
-        stocksPresenter.renewInfoOfCompanies()
         switchViews()
         return true
     }
