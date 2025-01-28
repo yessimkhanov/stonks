@@ -40,3 +40,26 @@ struct Results: Decodable {
     let displaySymbol: String
     let description: String
 }
+
+// MARK: Graph of Company
+struct GraphDaily: Decodable {
+    let timeSeriesDaily: [String : DailyData]
+    enum CodingKeys: String, CodingKey {
+        case timeSeriesDaily = "Time Series (Daily)"
+    }
+}
+
+struct DailyData: Decodable {
+    let close: String
+    enum CodingKeys: String, CodingKey {
+        case close = "4. close"
+    }
+}
+
+struct GraphHourly: Decodable {
+    let timeSeriesIntraday: [String : DailyData]
+    enum CodingKeys: String, CodingKey {
+        case timeSeriesIntraday = "Time Series (60min)"
+    }
+}
+

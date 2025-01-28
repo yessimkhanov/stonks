@@ -123,15 +123,21 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let store: ChartsStore = ChartsStore(presenter: stocksPresenter, index: indexPath.row)
-        let chartsView = ChartView(store: store)
+        let store: ChartsStore = ChartsStore(
+            index: indexPath.row,
+            coreData: stocksPresenter.getCoreDataManager(),
+            screenState: stocksPresenter.currentState,
+            networkinManager: stocksPresenter.getNetworkingManager()
+        )
+        let chartsView = ChartView(store: store) {
+            self.stocksAppViews.tableView.reloadData()
+        }
         let hostingController = UIHostingController(rootView: chartsView)
         hostingController.modalPresentationStyle = .fullScreen
         self.present(hostingController, animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             self.stocksAppViews.tableView.deselectRow(at: indexPath, animated: true)
         }
-
     }
 }
 

@@ -20,6 +20,8 @@ protocol StocksPresenterProtocol: AnyObject {
     func addCompany(_ companyToAdd: String)
     func getPopularCompany(at index: Int) -> String
     func renewInfoOfCompanies()
+    func getCoreDataManager() -> CoreDataManager
+    func getNetworkingManager() -> StocksManager
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
@@ -78,7 +80,10 @@ final class StocksPresenter: StocksPresenterProtocol {
         case .stocks:
             if coreDataManager.companies[index].isFavourite {
                 if let favIndex = coreDataManager.favouriteCompanies.firstIndex(where: { $0.name == coreDataManager.companies[index].name }) {
-                    coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[favIndex], index: favIndex)
+                    coreDataManager.deleteItemFromFavourite(
+                        item: coreDataManager.favouriteCompanies[favIndex],
+                        index: favIndex
+                    )
                 }
             }
             coreDataManager.deleteItemFromCompanies(item: coreDataManager.companies[index], index: index)
@@ -127,9 +132,14 @@ final class StocksPresenter: StocksPresenterProtocol {
             switch currentState {
             case .stocks:
                 let company = coreDataManager.companies[index]
-                if let favouriteIndex = coreDataManager.favouriteCompanies.firstIndex(where: { $0.name == company.name }) {
+                if let favouriteIndex = coreDataManager.favouriteCompanies.firstIndex(
+                    where: { $0.name == company.name }
+                ) {
                     coreDataManager.companies[index].isFavourite = false
-                    coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[favouriteIndex], index: favouriteIndex)
+                    coreDataManager.deleteItemFromFavourite(
+                        item: coreDataManager.favouriteCompanies[favouriteIndex],
+                        index: favouriteIndex
+                    )
                 }
                 
             case .favourite:
@@ -167,7 +177,16 @@ final class StocksPresenter: StocksPresenterProtocol {
     }
     
     func getPopularCompany(at index: Int) -> String {
-        return coreDataManager.companies[index].name
+        let length = coreDataManager.companies.count - 1;
+        return coreDataManager.companies[length - index].name
+    }
+    
+    func getCoreDataManager() -> CoreDataManager {
+        return self.coreDataManager
+    }
+    
+    func getNetworkingManager() -> StocksManager {
+        return self.networkingManager
     }
 }
 

@@ -12,6 +12,7 @@ import SwiftUICharts
 struct ChartView: View {
     @ObservedObject var store: ChartsStore
     @Environment(\.dismiss) var dismiss
+    var onDismiss: (() -> Void)?
     private var chartState: ChartsStore.ChartState? {store.chartState}
     var body: some View {
         VStack {
@@ -39,6 +40,7 @@ struct ChartView: View {
         HStack {
             Button {
                 dismiss()
+                onDismiss?()
             } label: {
                 Image(systemName: "arrow.backward")
                     .resizable()
