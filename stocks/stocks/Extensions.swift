@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
@@ -40,5 +41,15 @@ extension String {
     func charAt(_ index: Int) -> Character? {
         guard index >= 0 && index < self.count else { return nil }
         return self[self.index(self.startIndex, offsetBy: index)]
+    }
+}
+
+extension Color {
+    init(rgb: UInt32) {
+        self.init(
+            red: Double((rgb >> 16) & 0xFF) / 255.0,
+            green: Double((rgb >> 8) & 0xFF) / 255.0,
+            blue: Double(rgb & 0xFF) / 255.0
+        )
     }
 }

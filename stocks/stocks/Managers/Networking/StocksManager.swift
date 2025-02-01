@@ -137,5 +137,67 @@ final class StocksManager {
             return nil
         }
     }
+    
+    //MARK: Networking layer for Graph
+    func getGraphData(abbreviation: String, completion: @escaping (Result<GraphDaily, Error>) -> Void) {
+        let urlString = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=\(abbreviation)&outputsize=full&apikey=CJQAJ8BN86EF9AKF"
+        if let url = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { data, response, error in
+                if let error = error  {
+                    print("Error in function called (searchCompany)")
+                    completion(.failure(error))
+                }
+                if let safeData = data {
+                    if let data = self.parseJSONGraph(safeData) {
+                        completion(.success(data))
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    private func parseJSONGraph(_ data:Data) -> GraphDaily? {
+        let decoder = JSONDecoder()
+        do {
+            let decodedData = try decoder.decode(GraphDaily.self, from: data)
+            return decodedData
+        } catch {
+            print (error)
+            return nil
+        }
+    }
+    
+    private func parseJsonGraphHourly(_ data: Data) -> GraphHourly? {
+        let decoder = JSONDecoder()
+        do {
+            let decodedData = try decoder.decode(GraphHourly.self, from: data)
+            return decodedData
+        } catch {
+            return nil
+        }
+    }
+    
+    func getGraphDataDaily(abbreviation: String, completion: @escaping(Result<GraphHourly, Error>) -> Void) {
+        let urlString =
+        "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=\(abbreviation)&interval=60min&apikey=CJQAJ8BN86EF9AKF"
+        if let url = URL(string: urlString) {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { data, response, error in
+                if let error = error  {
+                    print("Error in function called (searchCompany)")
+                    completion(.failure(error))
+                }
+                if let safeData = data {
+                    if let data = self.parseJsonGraphHourly(safeData) {
+                        completion(.success(data))
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
 }
 

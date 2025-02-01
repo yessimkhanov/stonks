@@ -32,6 +32,7 @@ final class StocksView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(TickerCell.self, forCellReuseIdentifier: "Cell")
         tableView.showsVerticalScrollIndicator = false
+        tableView.refreshControl = UIRefreshControl()
         return tableView
     }()
     

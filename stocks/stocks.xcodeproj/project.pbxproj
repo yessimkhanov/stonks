@@ -13,7 +13,7 @@
 		191E10882CFA29EB00EEEA9A /* stocks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */; };
 		191E108A2CFA29EE00EEEA9A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 191E10892CFA29EE00EEEA9A /* Assets.xcassets */; };
 		191E108D2CFA29EE00EEEA9A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */; };
-		191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10942CFA2C2300EEEA9A /* TableViewModel.swift */; };
+		191E10952CFA2C2300EEEA9A /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10942CFA2C2300EEEA9A /* DataModels.swift */; };
 		191E10972CFA2C4800EEEA9A /* TickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10962CFA2C4800EEEA9A /* TickerCell.swift */; };
 		191E10992CFA2C6B00EEEA9A /* StocksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E10982CFA2C6B00EEEA9A /* StocksView.swift */; };
 		191E109B2CFD8F6900EEEA9A /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 191E109A2CFD8F6900EEEA9A /* Extensions.swift */; };
@@ -23,6 +23,8 @@
 		19F25EA52D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */; };
 		19F25EA62D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */; };
 		19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */; };
+		E848E29F2D4252C300FC53B4 /* ChartsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E848E29E2D4252C300FC53B4 /* ChartsStore.swift */; };
+		E848E2A52D425DBB00FC53B4 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = E848E2A42D425DBB00FC53B4 /* SwiftUICharts */; };
 		E8A107272D2E6B52000F0AC2 /* Montserrat-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8A107182D2E6B52000F0AC2 /* Montserrat-ExtraBold.ttf */; };
 		E8A107282D2E6B52000F0AC2 /* Montserrat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8A1071D2D2E6B52000F0AC2 /* Montserrat-Light.ttf */; };
 		E8A107292D2E6B52000F0AC2 /* Montserrat-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8A107202D2E6B52000F0AC2 /* Montserrat-MediumItalic.ttf */; };
@@ -57,7 +59,7 @@
 		191E10892CFA29EE00EEEA9A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		191E108C2CFA29EE00EEEA9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		191E108E2CFA29EE00EEEA9A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		191E10942CFA2C2300EEEA9A /* TableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewModel.swift; sourceTree = "<group>"; };
+		191E10942CFA2C2300EEEA9A /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
 		191E10962CFA2C4800EEEA9A /* TickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TickerCell.swift; sourceTree = "<group>"; };
 		191E10982CFA2C6B00EEEA9A /* StocksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StocksView.swift; sourceTree = "<group>"; };
 		191E109A2CFD8F6900EEEA9A /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 		19F25EA12D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FavouriteCompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19F25EA22D26DEF400FF02E6 /* CompanyItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CompanyItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		E848E29E2D4252C300FC53B4 /* ChartsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsStore.swift; sourceTree = "<group>"; };
 		E8A107122D2E6B52000F0AC2 /* COPYRIGHT.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = COPYRIGHT.txt; sourceTree = "<group>"; };
 		E8A107132D2E6B52000F0AC2 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E8A107142D2E6B52000F0AC2 /* Montserrat-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Black.ttf"; sourceTree = "<group>"; };
@@ -97,6 +100,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E848E2A52D425DBB00FC53B4 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,22 +128,15 @@
 			children = (
 				191E107D2CFA29EB00EEEA9A /* AppDelegate.swift */,
 				191E107F2CFA29EB00EEEA9A /* SceneDelegate.swift */,
-				191E10812CFA29EB00EEEA9A /* StocksViewController.swift */,
-				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
-				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
-				E8B2C0EF2D3261C000D06D3C /* ChartView.swift */,
-				E8E484EA2D2FF3240071C6AF /* SearchView.swift */,
-				191E10D12D11B38000EEEA9A /* StocksManager.swift */,
+				E848E2982D424DC800FC53B4 /* MainView */,
+				E848E2992D424E0400FC53B4 /* ChartsView */,
+				E848E29B2D424E5400FC53B4 /* Managers */,
 				191E10892CFA29EE00EEEA9A /* Assets.xcassets */,
 				191E108B2CFA29EE00EEEA9A /* LaunchScreen.storyboard */,
+				191E109A2CFD8F6900EEEA9A /* Extensions.swift */,
 				191E108E2CFA29EE00EEEA9A /* Info.plist */,
 				191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */,
-				191E10942CFA2C2300EEEA9A /* TableViewModel.swift */,
-				191E10962CFA2C4800EEEA9A /* TickerCell.swift */,
-				191E109A2CFD8F6900EEEA9A /* Extensions.swift */,
 				E8A107262D2E6B52000F0AC2 /* Montserrat  */,
-				19F25E9F2D26860B00FF02E6 /* StocksItem */,
-				E8E484E82D2FEE440071C6AF /* CoreDataManager.swift */,
 			);
 			path = stocks;
 			sourceTree = "<group>";
@@ -153,6 +150,54 @@
 				19F25EA32D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift */,
 			);
 			path = StocksItem;
+			sourceTree = "<group>";
+		};
+		E848E2982D424DC800FC53B4 /* MainView */ = {
+			isa = PBXGroup;
+			children = (
+				E8E484EA2D2FF3240071C6AF /* SearchView.swift */,
+				191E10CB2D01C29100EEEA9A /* StocksPresenter.swift */,
+				191E10982CFA2C6B00EEEA9A /* StocksView.swift */,
+				191E10812CFA29EB00EEEA9A /* StocksViewController.swift */,
+				191E10942CFA2C2300EEEA9A /* DataModels.swift */,
+				191E10962CFA2C4800EEEA9A /* TickerCell.swift */,
+			);
+			path = MainView;
+			sourceTree = "<group>";
+		};
+		E848E2992D424E0400FC53B4 /* ChartsView */ = {
+			isa = PBXGroup;
+			children = (
+				E8B2C0EF2D3261C000D06D3C /* ChartView.swift */,
+				E848E29E2D4252C300FC53B4 /* ChartsStore.swift */,
+			);
+			path = ChartsView;
+			sourceTree = "<group>";
+		};
+		E848E29B2D424E5400FC53B4 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E848E29D2D424E9D00FC53B4 /* Networking */,
+				E848E29C2D424E8E00FC53B4 /* CoreData */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		E848E29C2D424E8E00FC53B4 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				E8E484E82D2FEE440071C6AF /* CoreDataManager.swift */,
+				19F25E9F2D26860B00FF02E6 /* StocksItem */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
+		E848E29D2D424E9D00FC53B4 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				191E10D12D11B38000EEEA9A /* StocksManager.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 		E8A107262D2E6B52000F0AC2 /* Montserrat  */ = {
@@ -226,6 +271,9 @@
 				Base,
 			);
 			mainGroup = 191E10712CFA29EB00EEEA9A;
+			packageReferences = (
+				E848E2A32D425DBB00FC53B4 /* XCRemoteSwiftPackageReference "ChartView" */,
+			);
 			productRefGroup = 191E107B2CFA29EB00EEEA9A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -274,7 +322,8 @@
 			files = (
 				19F25EA72D26DEF400FF02E6 /* CompanyItem+CoreDataProperties.swift in Sources */,
 				191E10822CFA29EB00EEEA9A /* StocksViewController.swift in Sources */,
-				191E10952CFA2C2300EEEA9A /* TableViewModel.swift in Sources */,
+				E848E29F2D4252C300FC53B4 /* ChartsStore.swift in Sources */,
+				191E10952CFA2C2300EEEA9A /* DataModels.swift in Sources */,
 				19F25EA42D26DEF400FF02E6 /* FavouriteCompanyItem+CoreDataClass.swift in Sources */,
 				191E107E2CFA29EB00EEEA9A /* AppDelegate.swift in Sources */,
 				191E10CC2D01C29100EEEA9A /* StocksPresenter.swift in Sources */,
@@ -496,6 +545,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E848E2A32D425DBB00FC53B4 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = exactVersion;
+				version = "2.0.0-beta.2";
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E848E2A42D425DBB00FC53B4 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E848E2A32D425DBB00FC53B4 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		191E10862CFA29EB00EEEA9A /* stocks.xcdatamodeld */ = {
