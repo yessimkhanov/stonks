@@ -16,12 +16,12 @@ protocol StocksPresenterProtocol: AnyObject {
     func numberOfRows() -> Int
     func deleteCompany(index: Int)
     func companyForRow(at index: Int) -> Company
-    func starButtonPressed(at index: Int, isFavourite: Bool)
+    func starButtonPressed(for name: String)
     func addCompany(_ companyToAdd: String)
     func getPopularCompany(at index: Int) -> String
     func renewInfoOfCompanies()
-    func getCoreDataManager() -> CoreDataManager
-    func getNetworkingManager() -> StocksManager
+
+    func makeChartsView(for index: Int, onDismiss: (() -> Void)?) -> ChartView
 }
 
 final class StocksPresenter: StocksPresenterProtocol {
@@ -40,6 +40,7 @@ final class StocksPresenter: StocksPresenterProtocol {
     }
     
     func viewDidLoad() {
+        renewInfoOfCompanies()
         coreDataManager.getAllCompanies()
         coreDataManager.getFavouriteCompanies()
         view?.reloadTableView()
@@ -62,7 +63,6 @@ final class StocksPresenter: StocksPresenterProtocol {
     func renewInfoOfCompanies() {
         for company in coreDataManager.companies {
             addCompany(company.name)
-            print("Company refreshed: \(company.name)")
         }
     }
     
@@ -123,33 +123,8 @@ final class StocksPresenter: StocksPresenterProtocol {
         }
     }
     
-    func starButtonPressed(at index: Int, isFavourite: Bool) {
-        if isFavourite == false {
-            guard currentState == .stocks else { return }
-            coreDataManager.companies[index].isFavourite = true
-            coreDataManager.createFavouriteItem(company: coreDataManager.companies[index])
-        } else {
-            switch currentState {
-            case .stocks:
-                let company = coreDataManager.companies[index]
-                if let favouriteIndex = coreDataManager.favouriteCompanies.firstIndex(
-                    where: { $0.name == company.name }
-                ) {
-                    coreDataManager.companies[index].isFavourite = false
-                    coreDataManager.deleteItemFromFavourite(
-                        item: coreDataManager.favouriteCompanies[favouriteIndex],
-                        index: favouriteIndex
-                    )
-                }
-                
-            case .favourite:
-                let company = coreDataManager.favouriteCompanies[index]
-                if let stockIndex = coreDataManager.companies.firstIndex(where: { $0.name == company.name }) {
-                    coreDataManager.companies[stockIndex].isFavourite = false
-                }
-                coreDataManager.deleteItemFromFavourite(item: coreDataManager.favouriteCompanies[index], index: index)
-            }
-        }
+    func starButtonPressed(for name: String) {
+        coreDataManager.starButtonPressed(companyName: name)
         view?.reloadTableView()
     }
     
@@ -177,16 +152,30 @@ final class StocksPresenter: StocksPresenterProtocol {
     }
     
     func getPopularCompany(at index: Int) -> String {
-        let length = coreDataManager.companies.count - 1;
+        let length = coreDataManager.companies.count - 1
         return coreDataManager.companies[length - index].name
     }
     
-    func getCoreDataManager() -> CoreDataManager {
-        return self.coreDataManager
-    }
-    
-    func getNetworkingManager() -> StocksManager {
-        return self.networkingManager
+    func makeChartsView(for index: Int, onDismiss: (() -> Void)? = nil) -> ChartView {
+        let company: CompanyItem = {
+            switch currentState {
+            case .stocks:
+                return coreDataManager.companies[index]
+            case .favourite:
+                let favoriteCompany = coreDataManager.favouriteCompanies[index]
+                guard let companyIndex = coreDataManager.companies.firstIndex(where: {$0.name == favoriteCompany.name}) else {
+                    return coreDataManager.companies[0]
+                }
+                return coreDataManager.companies[companyIndex]
+            }
+        }()
+        
+        let store: ChartsStore = ChartsStore(
+            company: company,
+            coreDataManager: coreDataManager,
+            networkingManager: networkingManager
+        )
+        return ChartView(store: store, onDismiss: onDismiss)
     }
 }
 

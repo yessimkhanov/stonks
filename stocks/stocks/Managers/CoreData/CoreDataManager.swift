@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final  class CoreDataManager {
+final class CoreDataManager {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var companies: [CompanyItem] = []
     var favouriteCompanies: [FavouriteCompanyItem] = []
@@ -24,7 +24,7 @@ final  class CoreDataManager {
         do {
             try context.save()
         } catch {
-            // error
+            print(error)
         }
     }
     
@@ -40,7 +40,21 @@ final  class CoreDataManager {
         do {
             try context.save()
         } catch {
-            // error
+            print(error)
+        }
+    }
+    
+    func starButtonPressed(companyName: String) {
+        guard let index = companies.firstIndex(where: {$0.name == companyName}) else {
+            print("Error in finding a company inside a coreData")
+            return
+        }
+        if let favoriteIndex = favouriteCompanies.firstIndex(where: {$0.name == companyName}) {
+            companies[index].isFavourite.toggle()
+            deleteItemFromFavourite(item: favouriteCompanies[favoriteIndex], index: favoriteIndex)
+        } else {
+            companies[index].isFavourite.toggle()
+            createFavouriteItem(company: companies[index])
         }
     }
     

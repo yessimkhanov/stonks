@@ -18,37 +18,56 @@ enum ChartPeriod: String, CaseIterable {
 }
 
 final class ChartsStore: ObservableObject {
-    struct ChartState {
-        let data: [Double]
-    }
-    @Published var chartState: ChartState?
-    @Published var isFavourite: Bool = false
-    @Published var selectedPeriod: String = "D"
-    @Published var selectedSubBar: String = "Chart"
-    var coreDataManager: CoreDataManager
-    var networkingManager: StocksManager
-    var company: CompanyItem
-    var index: Int
-    var screenState: StateOfButton
-    init(index: Int, coreData: CoreDataManager, screenState: StateOfButton, networkinManager: StocksManager) {
-        self.index = index
-        coreDataManager = coreData
-        self.screenState = screenState
-        self.networkingManager = networkinManager
-        switch screenState {
-        case .stocks:
-            company = coreDataManager.companies[index]
-        case .favourite:
-            let favoriteCompany = coreDataManager.favouriteCompanies[index]
-            guard let companyIndex = coreDataManager.companies.firstIndex(where: {$0.name == favoriteCompany.name}) else {
-                company = coreData.companies[0]
-                print("Error in finding company index in ChartStore file")
-                return
-            }
-            company = coreDataManager.companies[companyIndex]
+    struct ViewState {
+        struct Company {
+            let abbreviation: String
+            let change: String
+            let price: Double
+            let name: String
         }
-        isFavourite = company.isFavourite
+        
+        let data: [Double]
+        let company: Company
+        var isFavorite: Bool
+        var selectedPeriod: String
+        var selectedSubBar: String
+    }
+    @Published var viewState: ViewState?
+    
+    private let company: CompanyItem
+    private let coreDataManager: CoreDataManager
+    private let networkingManager: StocksManager
+    
+    init(
+        company: CompanyItem,
+        coreDataManager: CoreDataManager,
+        networkingManager: StocksManager
+    ) {
+        self.company = company
+        self.coreDataManager = coreDataManager
+        self.networkingManager = networkingManager
+        self.viewState = makeViewState()
         self.getDataForDayChart(abbreviation: company.abbreviation, period: 15)
+    }
+    
+    private func makeViewState(
+        data: [Double] = [],
+        selectedPeriod: String = "D",
+        selectedSubBar: String = "Chart"
+    ) -> ViewState {
+        let company: ViewState.Company = .init(
+            abbreviation: company.abbreviation,
+            change: company.change,
+            price: company.price,
+            name: company.name
+        )
+        return ViewState(
+            data: data,
+            company: company,
+            isFavorite: self.company.isFavourite,
+            selectedPeriod: viewState?.selectedPeriod ?? selectedPeriod,
+            selectedSubBar: viewState?.selectedSubBar ?? selectedSubBar
+        )
     }
     
     func periodButtonPressed(buttonTitle: String) {
@@ -68,77 +87,54 @@ final class ChartsStore: ObservableObject {
                 getDataForChart(abbreviation: company.abbreviation, period: 500)
             }
         }
-        selectedPeriod = buttonTitle
+        viewState?.selectedPeriod = buttonTitle
     }
     
     func buyButtonPressed() {
     }
     
     func favouriteButtonPressed() {
-        if isFavourite {
-            switch screenState {
-            case .stocks:
-                let company = coreDataManager.companies[index]
-                if let favouriteIndex = coreDataManager.favouriteCompanies.firstIndex(where: {$0.name == company.name}) {
-                    coreDataManager.companies[index].isFavourite = false
-                    coreDataManager.deleteItemFromFavourite(
-                        item:coreDataManager.favouriteCompanies[favouriteIndex],
-                        index: favouriteIndex
-                    )
-                }
-            case .favourite:
-                let favouriteCompany = coreDataManager.favouriteCompanies[index]
-                if let stockIndex = coreDataManager.companies.firstIndex(where: {$0.name == favouriteCompany.name}) {
-                    coreDataManager.companies[stockIndex].isFavourite = false
-                    coreDataManager.deleteItemFromFavourite(item: favouriteCompany, index: index)
-                }
-            }
-        } else {
-            guard screenState != .favourite else {return}
-            let company = coreDataManager.companies[index]
-            company.isFavourite = true
-            coreDataManager.createFavouriteItem(company: company)
+        if let viewState = viewState {
+            coreDataManager.starButtonPressed(companyName: viewState.company.name)
         }
-        isFavourite.toggle()
+        viewState?.isFavorite.toggle()
     }
     
     func subBarButtonPressed(buttonTitle: String) {
-        selectedSubBar = buttonTitle
+        viewState?.selectedSubBar = buttonTitle
     }
     
-    func getDataForChart(abbreviation: String, period: Int) {
+    private func getDataForChart(abbreviation: String, period: Int) {
         var data: [Double] = []
-        networkingManager.getGraphData(abbreviation: abbreviation) {result in
-                switch result {
+        networkingManager.getGraphData(abbreviation: abbreviation) { result in
+            switch result {
             case .success(let graphData):
-                    let sortedGraph = graphData.timeSeriesDaily.sorted(by: {$0.key > $1.key})
-                    for (date, dailyData) in sortedGraph.prefix(period).reversed() {
-                        guard let closeDouble = Double(dailyData.close) else {continue}
-                        data.append(closeDouble)
-                        print("date:\(date) and price:\(closeDouble)")
-                        
-                    }
-                    DispatchQueue.main.async {
-                        self.chartState = ChartState(data: data)
-                    }
+                let sortedGraph = graphData.timeSeriesDaily.sorted(by: {$0.key > $1.key})
+                for (_, dailyData) in sortedGraph.prefix(period).reversed() {
+                    guard let closeDouble = Double(dailyData.close) else {continue}
+                    data.append(closeDouble)
+                }
+                DispatchQueue.main.async {
+                    self.viewState = self.makeViewState(data: data)
+                }
             case .failure(let error):
                 print("Error: \(error)")
             }
         }
     }
     
-    func getDataForDayChart(abbreviation: String, period: Int) {
+    private func getDataForDayChart(abbreviation: String, period: Int) {
         var data: [Double] = []
         networkingManager.getGraphDataDaily(abbreviation: abbreviation) { result in
             switch result {
             case .success(let graphData):
                 let sortedGraph = graphData.timeSeriesIntraday.sorted(by: {$0.key > $1.key})
-                for (date, dailyData) in sortedGraph.prefix(period).reversed() {
-                    guard let closeDouble = Double(dailyData.close) else {continue}
+                for (_, dailyData) in sortedGraph.prefix(period).reversed() {
+                    guard let closeDouble = Double(dailyData.close) else { continue }
                     data.append(closeDouble)
                 }
                 DispatchQueue.main.async {
-                    self.chartState = ChartState(data: data)
+                    self.viewState = self.makeViewState(data: data)
                 }
             case .failure(let error):
                 print(error)

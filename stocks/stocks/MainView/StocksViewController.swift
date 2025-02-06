@@ -92,7 +92,6 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
             price: company.price,
             background: backgroundColor,
             isFavourite: company.isFavourite,
-            indexPath: indexPath.row,
             change: company.change
         )
         
@@ -123,15 +122,11 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let store: ChartsStore = ChartsStore(
-            index: indexPath.row,
-            coreData: stocksPresenter.getCoreDataManager(),
-            screenState: stocksPresenter.currentState,
-            networkinManager: stocksPresenter.getNetworkingManager()
-        )
-        let chartsView = ChartView(store: store) {
-            self.stocksAppViews.tableView.reloadData()
+        let chartsView = stocksPresenter.makeChartsView(for: indexPath.row) { [weak self] in
+            self?.dismiss(animated: true)
+            self?.stocksAppViews.tableView.reloadData()
         }
+        
         let hostingController = UIHostingController(rootView: chartsView)
         hostingController.modalPresentationStyle = .fullScreen
         self.present(hostingController, animated: true)
@@ -142,8 +137,8 @@ extension StocksViewController:UITableViewDelegate, UITableViewDataSource {
 }
 
 extension StocksViewController:TickerCellDelegate {
-    func starButtonPressed(at index: Int, for state: Bool) {
-        stocksPresenter.starButtonPressed(at: index, isFavourite: state)
+    func starButtonPressed(for name: String) {
+        stocksPresenter.starButtonPressed(for: name)
     }
 }
 

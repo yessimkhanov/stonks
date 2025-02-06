@@ -8,12 +8,11 @@
 import UIKit
 
 protocol TickerCellDelegate: AnyObject {
-    func starButtonPressed(at index: Int, for state: Bool)
+    func starButtonPressed(for name: String)
 }
 
 final class TickerCell: UITableViewCell {
     weak var delegate: TickerCellDelegate?
-    private var indexPath: Int?
     private var isFavourite : Bool?
     
     private let logo: UIImageView = {
@@ -140,7 +139,6 @@ final class TickerCell: UITableViewCell {
         price: Double,
         background : UIColor,
         isFavourite: Bool,
-        indexPath: Int,
         change: String
     ) {
         self.logo.image = logo
@@ -151,15 +149,14 @@ final class TickerCell: UITableViewCell {
         self.contentView.backgroundColor = background
         self.isFavourite = isFavourite
         self.starButton.tintColor = UIColor(rgb: isFavourite ? 0xFFCA1C : 0xBABABA)
-        self.indexPath = indexPath
         self.change.text = change
         self.change.textColor = change.charAt(0) == "-" ? UIColor(rgb: 0xB22424) : UIColor(rgb: 0x24B25D)
     }
     
     @objc
     private func starButtonPressed() {
-        if let isFavourite, let indexPath {
-            self.delegate?.starButtonPressed(at: indexPath, for: isFavourite)
+        if let isFavourite {
+            self.delegate?.starButtonPressed(for: self.name.text ?? "")
             self.starButton.tintColor = UIColor(rgb: isFavourite ? 0xFFCA1C : 0xBABABA)
         }
     }
